@@ -5,6 +5,7 @@
  */
 package modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,11 +13,55 @@ import java.util.List;
  * @author DiegoAndres
  */
 public class Entrenador {
+    
+    static int counter = 0;
+    
     private int id;
-    private String nombre;
+    private String name;
+    private List<InstanciaPokemon> pokemons;
+    private InstanciaPokemon nextPoke;
+    private Movimiento nextMove;
     
-    // sus 4 pokemon
-    private List<InstanciaPokemon> pokemones;
+    public List<InstanciaPokemon> getTeam(){
+        return pokemons;
+    }
+    public void setTeam(List<InstanciaPokemon> pokemonTeam) {
+        pokemons = pokemonTeam;
+    }
+    public InstanciaPokemon getNextPoke() {
+        return nextPoke;
+    }
+    public Movimiento getNextMove() {
+        return nextMove;
+    }
+
     
-    private int idBatalla;
+    //private int idBatalla;
+    
+    
+    
+    
+    public Entrenador(String name)
+    {
+        id = counter++;
+        
+        this.name = name;        
+    }
+    
+
+    public void selectNextMove(InstanciaPokemon pokemon, Movimiento move)
+    {
+        //**verificar que el pokemon pertenee al team y que el move pertenee al poquemon.
+        
+        nextPoke = pokemon;
+        nextMove = move;
+    }
+    
+    public void clearNextMove()
+    {
+        nextPoke = null;
+        nextMove = null;
+    }
+
+
 }

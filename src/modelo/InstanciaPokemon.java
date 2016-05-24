@@ -12,12 +12,17 @@ import java.util.List;
  * @author DiegoAndres
  */
 public class InstanciaPokemon {
+    static int counter = 0;
     private int id;
     private String nombre;
-    private int idPokemon;
+    private Pokemon pokemon;
     private int idEntrenador;
-    private List<Movimiento> movimientos;
+    private List<Movimiento> moves;
     private String estado;
+    private int hitPoints;
+    
+    
+    
 
     public int getId() {
         return id;
@@ -35,12 +40,12 @@ public class InstanciaPokemon {
         this.nombre = nombre;
     }
 
-    public int getIdPokemon() {
-        return idPokemon;
+    public Pokemon getIdPokemon() {
+        return pokemon;
     }
 
-    public void setIdPokemon(int idPokemon) {
-        this.idPokemon = idPokemon;
+    public void setIdPokemon(Pokemon pokemon) {
+        this.pokemon = pokemon;
     }
 
     public int getIdEntrenador() {
@@ -52,11 +57,11 @@ public class InstanciaPokemon {
     }
 
     public List<Movimiento> getMovimientos() {
-        return movimientos;
+        return moves;
     }
 
     public void setMovimientos(List<Movimiento> movimientos) {
-        this.movimientos = movimientos;
+        this.moves = movimientos;
     }
 
     public String getEstado() {
@@ -66,4 +71,34 @@ public class InstanciaPokemon {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public int getHitPoints() {
+        return hitPoints;
+    }
+
+    public void setHitPoints(int hitPoints) {
+        this.hitPoints = hitPoints;
+    }
+    
+    
+    
+    public InstanciaPokemon(Pokemon pokemon, List<Movimiento> moves)
+    {
+        id = counter++;
+        
+        this.pokemon = pokemon;
+        
+        this.moves = moves;
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
