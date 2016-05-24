@@ -1,0 +1,60 @@
+Charmeleon
+Fire
+58 64 58 80 65 80
+Ampharos
+Electric
+90 75 85 115 95 55
+Pidgeotto
+Normal/Flying
+63 60 55 50 50 71
+Pikachu
+Electric
+35 55 40 50 50 90
+Nidoking
+Poison/Ground
+81 102 77 85 75 85
+Paras
+Bug/Grass
+35 70 55 45 55 25
+Meowth
+Normal
+40 45 35 40 40 90
+Persian
+Normal
+65 70 60 65 65 115
+Alakazam
+Psychic
+55 50 45 135 95 120
+Victreebel
+Grass/Poison
+80 105 65 100 70 70
+Cloyster
+Water/Ice
+50 95 180 85 45 70
+Gengar
+Ghost/Poison
+60 65 60 130 75 110
+Kangaskhan
+Normal
+105 95 80 40 80 90
+Kabutops
+Rock/Water
+60 115 105 65 70 80
+Mewtwo
+Psychic
+106 110 90 154 90 130
+Mew
+Psychic
+100 100 100 100 100 100
+Wobbuffet
+Psychic
+190 33 58 33 58 33
+Donphan
+Ground
+90 120 120 60 60 50
+Larvitar
+Rock/Ground
+50 64 50 45 50 41
+Tyranitar
+Rock/Dark
+100 134 110 95 100 61
