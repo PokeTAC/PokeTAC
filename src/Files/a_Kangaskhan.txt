@@ -1,0 +1,24 @@
+Comet Punch
+Normal
+54 85
+Bite
+Dark
+60 100
+Double hit
+Normal
+70 90
+Mega Punch
+Normal
+80 85
+Dizzy Punch
+Normal
+70 100 P
+Outrage
+Dragon
+120 100
+Sucker Punch
+Dark
+80 100
+Cut
+Normal
+50 95

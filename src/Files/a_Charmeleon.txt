@@ -1,0 +1,24 @@
+Scratch
+Normal
+40 100 
+Ember
+Fire
+40 100
+Smokescreen
+Normal 
+0 100
+Dragon Rage
+Dragon
+40 100
+Scary Face
+Normal 
+0 100 
+Fire Fang
+Fire
+65 95
+Flamethrower
+Fire
+90 100 
+Inferno
+Fire
+100 50

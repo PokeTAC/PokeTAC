@@ -46,9 +46,9 @@ Psychic
 Mew
 Psychic
 100 100 100 100 100 100
-Wobbuffet
-Psychic
-190 33 58 33 58 33
+Gligar
+Ground/Flying
+65 75 105 35 65 85
 Donphan
 Ground
 90 120 120 60 60 50

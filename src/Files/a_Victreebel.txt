@@ -1,0 +1,25 @@
+Vine Whip
+Grass
+45 100
+Sleep Powder
+Grass
+0 75 D
+Razor Leaf
+Grass
+55 95
+Leaf Blade
+Grass
+90 100
+Leaf Storm
+Grass
+130 90
+Leaf Tornado
+Grass
+65 90
+Solar Beam
+Grass
+120 100
+Sludge Bomb
+Poison
+90 100 E
+

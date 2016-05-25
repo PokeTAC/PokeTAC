@@ -1,0 +1,24 @@
+Confusion
+Psychic
+50 100
+Swift
+Normal
+60 999
+Psycho Cut
+Psychic
+70 100
+Psychic
+Psychic
+90 100
+Aura Sphere
+Fight
+80 999
+Psystrike
+Psychic
+100 100
+Future Sight
+Psychic
+120 100
+Thunder Wave
+Normal
+0 100 P

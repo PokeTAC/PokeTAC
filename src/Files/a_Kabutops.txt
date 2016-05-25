@@ -1,0 +1,24 @@
+Night Slash
+Dark
+70 100
+Scratch
+Normal
+40 100
+Aqua Jet
+Water
+40 100
+Slash
+Normal
+70 100
+Ancient Power
+Rock
+60 100
+Cut
+Normal
+50 95
+Ice Beam
+Ice
+90 100
+X-Scissor
+Bug
+80 100
