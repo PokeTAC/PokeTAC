@@ -1,0 +1,25 @@
+Scratch
+Normal
+40 100
+Bite
+Dark
+60 100
+Fury Swipes
+Normal
+72 80
+Feint Attack
+Dark
+60 100
+Pay Day
+Normal
+40 100
+Assurance
+Dark
+60 100
+Night Slash
+Dark
+70 100
+Feint
+Normal
+30 100
+

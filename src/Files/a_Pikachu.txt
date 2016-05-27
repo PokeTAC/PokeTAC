@@ -1,0 +1,24 @@
+Thunder Schock
+Electric
+40 100 P
+Quick Attack
+Normal
+40 100
+Thunder Wave
+Electric
+0 100 P
+Slam
+Normal
+80 75
+Thunder
+Electric
+110 70
+Wild Charge
+Electric
+90 100
+Nuzzle
+Electric
+20 100
+Spark
+Electric
+65 100

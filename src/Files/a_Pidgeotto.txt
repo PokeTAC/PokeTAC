@@ -1,0 +1,24 @@
+Tackle
+Normal
+50 100
+Gust
+Flying
+40 100
+Quick Attack
+Normal
+40 100
+Twister
+Dragon
+40 100
+Wing Attack
+Flying
+60 100
+Air Slash
+Flying
+75 95
+Hurricane
+Flying
+110 70
+Whirlwind
+Normal
+0 100

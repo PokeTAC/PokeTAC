@@ -1,0 +1,24 @@
+Confusion
+Psychic
+50 100
+PsyBeam
+Psychic
+65 100
+Psycho Cut
+Psychic
+70 100
+Thunder Wave
+Normal
+0 100 P 
+Psychic
+Psychic
+90 100
+Future Sight
+Psychic
+120 100
+Dazzling Gleam
+Fairy
+80 100
+Hyper Beam
+Normal
+150 90
