@@ -20,4 +20,11 @@ public class Movimiento {
     private boolean dormir;
     private boolean disminuir_velocidad;
     private boolean disminuir_ataque;
+    
+    
+    public int getBasePower()
+    {
+        return base_power;
+    }
+    
 }

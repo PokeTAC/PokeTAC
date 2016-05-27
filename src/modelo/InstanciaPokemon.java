@@ -77,10 +77,17 @@ public class InstanciaPokemon {
     }
 
     public void setHitPoints(int hitPoints) {
-        this.hitPoints = hitPoints;
+        
+        if (hitPoints < 0)
+            this.hitPoints = 0;
+        else
+            this.hitPoints = hitPoints;
     }
     
-    
+    public Pokemon getPokeInfo()
+    {
+        return pokemon;
+    }
     
     public InstanciaPokemon(Pokemon pokemon, List<Movimiento> moves)
     {

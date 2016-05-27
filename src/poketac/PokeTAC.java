@@ -7,6 +7,7 @@ package poketac;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import modelo.Batalla;
 import modelo.Entrenador;
 import modelo.InstanciaPokemon;
@@ -38,13 +39,14 @@ public class PokeTAC {
             pokeTAC.selectAITeam();
             
             //GUI: Seleccionar Team de usuario para la batalla
-            pokeTAC.userTrainer.setTeam(null);
+            pokeTAC.askUserTeam();
 
             pokeTAC.initBattle();
             
-            //GUI: Verificar turno de batalla
+            //GUI: Verificar turno de batalla o si ha terminado
             while (!pokeTAC.activeBattle.isBattlerOver())
             {
+                
                 Entrenador nextTrainer = pokeTAC.activeBattle.nextTrainer();
 
                 if (nextTrainer==pokeTAC.aiTrainer)
@@ -54,7 +56,7 @@ public class PokeTAC {
                 else
                 {
                     //GUI: Seleccionar movimiento usuario
-                    pokeTAC.userTrainer.selectNextMove(null,null);
+                    pokeTAC.askUserMove();
                 }
 
                 pokeTAC.activeBattle.proccessTurnLogic();
@@ -82,6 +84,8 @@ public class PokeTAC {
         return ans.equalsIgnoreCase("s");
     }
     
+    // << Constants >>
+    
     final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
     final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
     
@@ -92,6 +96,7 @@ public class PokeTAC {
     Entrenador userTrainer;
     Entrenador aiTrainer;
     
+    Random rnd;
     
     // << InternalMethods >>
     
@@ -106,7 +111,7 @@ public class PokeTAC {
         userTrainer = new Entrenador(username);
         aiTrainer = new Entrenador("IA");
         
-        
+        rnd = new Random();
        
     }
     
@@ -124,21 +129,22 @@ public class PokeTAC {
         
         for (int i = 0; i < MAX_POKEMON; i++) {
             
-            Pokemon pokemon = null; //Random de pokemonDB
+            Pokemon pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
             
             List<Movimiento> moves = new ArrayList<>();
             
             for (int j = 0; j < MAX_MOVES; j++) {
                 
-                Movimiento move = null; //Random de pokemon.moves
+                List<Movimiento> pokeMoves = pokemon.getMoves();
+                
+                Movimiento move = pokeMoves.get(rnd.nextInt(pokeMoves.size()));              
                 
                 moves.add(move);
             }
             
             ipokemons.add(new InstanciaPokemon(pokemon,moves));
         }
-        
-        
+                
         aiTrainer.setTeam(ipokemons);
     }
     
@@ -149,11 +155,16 @@ public class PokeTAC {
  
     private void selectAIMove()
     {
-        InstanciaPokemon iPokemon = null; //Random de aiTrainer.ipokemons
-        
-        Movimiento move = null; //random de pokemon.moves
-        
-        aiTrainer.selectNextMove(iPokemon,move);
+        if (rnd.nextBoolean())
+        {
+            //CambiarPokemon
+            aiTrainer.changePokemon(aiTrainer.getTeam().get(rnd.nextInt(MAX_POKEMON)));
+        }
+        else
+        {
+            //Escojer ataque
+            aiTrainer.setNextMove(aiTrainer.getActivePokemon().getMovimientos().get(MAX_MOVES));
+        }     
     }
     
     private void endBattle()
@@ -164,6 +175,47 @@ public class PokeTAC {
     private void endGame()
     {
         
+    }
+
+    private void askUserMove() {
+                
+        if (rnd.nextBoolean())
+        {
+            //CambiarPokemon
+            userTrainer.changePokemon(userTrainer.getTeam().get(rnd.nextInt(MAX_POKEMON)));
+        }
+        else
+        {
+            //Escojer ataque
+            userTrainer.setNextMove(userTrainer.getActivePokemon().getMovimientos().get(MAX_MOVES));
+        } 
+        
+    }
+
+    private void askUserTeam() {
+        
+        List<InstanciaPokemon> ipokemons = new ArrayList<>();
+        
+        for (int i = 0; i < MAX_POKEMON; i++) {
+            
+            Pokemon pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
+            
+            List<Movimiento> moves = new ArrayList<>();
+            
+            for (int j = 0; j < MAX_MOVES; j++) {
+                
+                List<Movimiento> pokeMoves = pokemon.getMoves();
+                
+                Movimiento move = pokeMoves.get(rnd.nextInt(pokeMoves.size()));              
+                
+                moves.add(move);
+            }
+            
+            ipokemons.add(new InstanciaPokemon(pokemon,moves));
+        }
+        
+        userTrainer.setTeam(ipokemons);
+                
     }
     
     

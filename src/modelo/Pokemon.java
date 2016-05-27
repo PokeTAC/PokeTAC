@@ -20,6 +20,8 @@ public class Pokemon {
     private int velocidad;
     
     private List<Tipo> tipos;
+    
+    private List<Movimiento> moves;
 
     public int getId() {
         return id;
@@ -75,5 +77,12 @@ public class Pokemon {
 
     public void setTipos(List<Tipo> tipos) {
         this.tipos = tipos;
+    }
+
+    /**
+     * @return the moves
+     */
+    public List<Movimiento> getMoves() {
+        return moves;
     }
 }

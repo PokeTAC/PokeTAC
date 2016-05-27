@@ -57,16 +57,38 @@ public class Batalla {
     public void proccessTurnLogic()
     {
         Entrenador trainer = nextTrainer();
+        Entrenador trainerOp; if (nextToMove==0) trainerOp = trainers.get(1); else trainerOp = trainers.get(0);
+        
+        //Si el siguiente movimiento es null (hizo cambio de pokemon), pasar el turno
+        if (trainer.getNextMove()!=null)
+        {
+            Pokemon pokeInfo = trainer.getActivePokemon().getPokeInfo();
+            Pokemon pokeInfoOp = trainerOp.getActivePokemon().getPokeInfo();
+            
+            //Damage = (Atck/Def_op)*base_power – speed_op*10;
+            int damage = (pokeInfo.getAtaque() / pokeInfoOp.getDefensa()) * trainer.getNextMove().getBasePower() - pokeInfoOp.getVelocidad()*10;
+            trainerOp.getActivePokemon().setHitPoints(trainer.getActivePokemon().getHitPoints() - damage);
+            
+            //Consumir movimiento
+            trainer.setNextMove(null);
+            
+            //Verificar si el poquemon murio y cambiarlo por otro vivo
+            if (trainerOp.getActivePokemon().getHitPoints()==0)
+            {                
+                List<InstanciaPokemon> pokeTeamOp = trainerOp.getTeam();
+                
+                for (int i = 0; i < pokeTeamOp.size(); i++) {
+                    
+                    if (pokeTeamOp.get(i).getHitPoints()>0)
+                    {
+                        trainerOp.changePokemon(pokeTeamOp.get(i));
+                        break;
+                    }
+                } 
+            }
+        }
         
         
-        //**Logia delataque............
-        
-        //trainer.getNextPoke();
-        //trianer.getNextMove();
-        
-        //.............
-        
-        trainer.clearNextMove();
         
         nextToMove++; if (nextToMove==trainers.size()) nextToMove = 0;
     }

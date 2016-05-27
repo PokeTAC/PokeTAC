@@ -19,7 +19,7 @@ public class Entrenador {
     private int id;
     private String name;
     private List<InstanciaPokemon> pokemons;
-    private InstanciaPokemon nextPoke;
+    private InstanciaPokemon activePokemon;
     private Movimiento nextMove;
     
     public List<InstanciaPokemon> getTeam(){
@@ -28,8 +28,8 @@ public class Entrenador {
     public void setTeam(List<InstanciaPokemon> pokemonTeam) {
         pokemons = pokemonTeam;
     }
-    public InstanciaPokemon getNextPoke() {
-        return nextPoke;
+    public InstanciaPokemon getActivePokemon() {
+        return activePokemon;
     }
     public Movimiento getNextMove() {
         return nextMove;
@@ -48,20 +48,31 @@ public class Entrenador {
         this.name = name;        
     }
     
-
-    public void selectNextMove(InstanciaPokemon pokemon, Movimiento move)
+    public void changePokemon(InstanciaPokemon pokemon)
     {
-        //**verificar que el pokemon pertenee al team y que el move pertenee al poquemon.
-        
-        nextPoke = pokemon;
+        activePokemon = pokemon;
+        /*
+        if (pokemons.contains(pokemon))
+        {
+            if (pokemon.getHitPoints()>0)
+            {
+                
+            }
+            else
+            {
+                //throw new Exception("Pokemon no tiene vida restante.");
+            }
+        }
+        else
+        {
+            //throw new Exception("Pokemon no pertenece al equipo.");
+        }
+        */
+    }
+
+    public void setNextMove(Movimiento move)
+    {
         nextMove = move;
     }
     
-    public void clearNextMove()
-    {
-        nextPoke = null;
-        nextMove = null;
-    }
-
-
 }
