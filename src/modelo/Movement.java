@@ -18,12 +18,12 @@ public class Movement {
     private int base_power;
     private int accuracy;
     private PokeType pokeType;
-    private Effect pokeEffect;
+    private EffectInfo pokeEffect;
     
     public int getBasePower()    {
         return base_power;
     }
-    public Effect getPokeEffect() {
+    public EffectInfo getPokeEffect() {
         return pokeEffect;
     }
     public String getName() {
@@ -37,7 +37,7 @@ public class Movement {
     }
     
     
-    public Movement(String name, int basePower, int accuracy, PokeType pokeType, Effect pokeEffect)
+    public Movement(String name, int basePower, int accuracy, PokeType pokeType, EffectInfo pokeEffect)
     {
         this.id = counter++; 
         this.name = name;

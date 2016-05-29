@@ -9,9 +9,27 @@ package modelo;
  *
  * @author Franco
  */
-public enum Effect {
-    None,
-    Paralyze,
-    Sleep,
-    Poison
+public class Effect {
+    
+    private EffectInfo effectInfo;
+    private int remainingTurns;
+    
+    public Effect(EffectInfo effectInfo, int turns){
+        this.effectInfo = effectInfo;
+        this.remainingTurns = turns;
+    }
+    
+    public EffectInfo getEffectInfo(){
+        return effectInfo;
+    }
+    
+    public int getRemainingTurns(){
+        return remainingTurns;
+    }
+    
+    public void decreaseRemainingTurns()
+    {
+        if (remainingTurns>0) remainingTurns--;
+    }
+            
 }

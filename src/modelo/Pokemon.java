@@ -22,10 +22,7 @@ public class Pokemon {
     private int idEntrenador;
     private List<Movement> moves;
     
-    private List<Effect> activeEffects;
-
-    
-    
+    private List<Effect> activeEffects;    
     
 
     public int getId() {
@@ -96,14 +93,25 @@ public class Pokemon {
         this.activeEffects = new ArrayList<Effect>();
         
     }
+
     
-    
-    
-    
-    
-    
-    
-    
-    
+    public List<Effect> getActiveEffects() {
+        return activeEffects;
+    }
+
+    void activateEffect(EffectInfo effect) {
+
+        for(Effect activeEffect : activeEffects)
+        {
+            if (activeEffect.getEffectInfo() == effect)
+            {
+                activeEffects.remove(activeEffect);
+                break;
+            }
+        }
+        
+        activeEffects.add(new Effect(effect, effect.EFFECT_DURATION));
+    }
+  
     
 }

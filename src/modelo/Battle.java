@@ -14,8 +14,6 @@ import java.util.List;
  */
 public class Battle {
     
-    final int POKEEFFECT_DURATION = 3; //Como los archivos no indican nada, el efecto siempre durara 3 turnos
-    
     static int idCounter = 0;
     
     private int id;
@@ -72,11 +70,20 @@ public class Battle {
             trainerOp.getActivePokemon().setHitPoints(trainer.getActivePokemon().getHitPoints() - damage);
             
             //== Procesar efecto
-            
-            
+            if (true) //TODO: Revisar probabilidad de ser affectado
+            {
+                EffectInfo effect = trainer.getNextMove().getPokeEffect();
+                trainerOp.getActivePokemon().activateEffect(effect);
+            }
             
             //Consumir movimiento
             trainer.setNextMove(null);
+            
+            
+            //==Procesar  efectos
+            ProccessEffects(trainer);
+            ProccessEffects(trainerOp);
+            
             
             //Verificar si el poquemon murio y cambiarlo por otro vivo
             if (trainerOp.getActivePokemon().getHitPoints()==0)
@@ -112,6 +119,25 @@ public class Battle {
         }
         
         return true;
+    }
+
+    private static void ProccessEffects(Trainer trainer) {
+        
+        List<Effect> effects = trainer.getActivePokemon().getActiveEffects();
+        for(Effect effect : effects)
+        {
+            //En caso de veneno
+            if (effect.getEffectInfo()==EffectInfo.Poison){
+                trainer.getActivePokemon().setHitPoints(trainer.getActivePokemon().getHitPoints()-effect.getEffectInfo().POISON_DAMAGE);
+            }
+            
+            //Reducir turnos de efectos
+            effect.decreaseRemainingTurns();
+            if (effect.getRemainingTurns()==0)
+            {
+                effects.remove(effect); //No se si esto funciona bien
+            }
+        }
     }
     
     
