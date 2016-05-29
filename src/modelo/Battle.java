@@ -64,10 +64,16 @@ public class Battle {
         {
             PokeInfo pokeInfo = trainer.getActivePokemon().getPokeInfo();
             PokeInfo pokeInfoOp = trainerOp.getActivePokemon().getPokeInfo();
-            
-            //Damage = (Atck/Def_op)*base_power – speed_op*10;
-            int damage = (pokeInfo.getAtaque() / pokeInfoOp.getDefensa()) * trainer.getNextMove().getBasePower() - pokeInfoOp.getVelocidad()*10;
-            trainerOp.getActivePokemon().setHitPoints(trainer.getActivePokemon().getHitPoints() - damage);
+              
+            //== Procesar daño
+            //Calcular daño: Damage = (Atck/Def_op)*base_power – speed_op*10  ???
+            double damage = (pokeInfo.getAtaque() / pokeInfoOp.getDefensa()) * trainer.getNextMove().getBasePower() - pokeInfoOp.getVelocidad()*10;
+            //Multiplicador de tipo
+            double multiplier = trainer.getNextMove().getPokeType().getMultiplier(trainerOp.getActivePokemon().getPokeInfo().getPokeTypes());
+            damage *= multiplier;
+            //Nuevo hitpoints
+            int newHitPoints = (int)(trainer.getActivePokemon().getHitPoints() - damage);
+            trainerOp.getActivePokemon().setHitPoints(newHitPoints);
             
             //== Procesar efecto
             if (true) //TODO: Revisar probabilidad de ser affectado
