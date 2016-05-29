@@ -80,7 +80,7 @@ public class Battle {
             trainer.setNextMove(null);
             
             
-            //==Procesar  efectos
+            //==Procesar daños y turnos de efectos 
             ProccessEffects(trainer);
             ProccessEffects(trainerOp);
             

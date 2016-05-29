@@ -5,13 +5,17 @@
  */
 package modelo;
 
+import java.util.Dictionary;
+import java.util.Map;
+
 /**
  *
  * @author DiegoAndres
  */
 public class PokeType {
     private int id;
-    private String nombre;
+    private String name;
+    private Map<PokeType,Double> multiplicators;
 
     public int getId() {
         return id;
@@ -22,10 +26,10 @@ public class PokeType {
     }
 
     public String getNombre() {
-        return nombre;
+        return name;
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.name = nombre;
     }
 }
