@@ -9,7 +9,7 @@ package modelo;
  *
  * @author DiegoAndres
  */
-public class Movimiento {
+public class Movement {
     
     private static int counter = 0;
     
@@ -37,7 +37,7 @@ public class Movimiento {
     }
     
     
-    public Movimiento(String name, int basePower, int accuracy, PokeType pokeType, Effect pokeEffect)
+    public Movement(String name, int basePower, int accuracy, PokeType pokeType, Effect pokeEffect)
     {
         this.id = counter++; 
         this.name = name;

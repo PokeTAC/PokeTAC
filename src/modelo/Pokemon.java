@@ -20,7 +20,7 @@ public class Pokemon {
     private PokeInfo pokeInfo;
     private int hitPoints;
     private int idEntrenador;
-    private List<Movimiento> moves;
+    private List<Movement> moves;
     
     private List<Effect> activeEffects;
 
@@ -60,11 +60,11 @@ public class Pokemon {
         this.idEntrenador = idEntrenador;
     }
 
-    public List<Movimiento> getMovimientos() {
+    public List<Movement> getMovimientos() {
         return moves;
     }
 
-    public void setMovimientos(List<Movimiento> movimientos) {
+    public void setMovimientos(List<Movement> movimientos) {
         this.moves = movimientos;
     }
 
@@ -85,7 +85,7 @@ public class Pokemon {
         return pokeInfo;
     }
     
-    public Pokemon(PokeInfo pokemon, List<Movimiento> moves)
+    public Pokemon(PokeInfo pokemon, List<Movement> moves)
     {
         id = counter++;
         

@@ -21,7 +21,7 @@ public class PokeInfo {
     
     private List<PokeType> tipos;
     
-    private List<Movimiento> moves;
+    private List<Movement> moves;
 
     public int getId() {
         return id;
@@ -82,7 +82,7 @@ public class PokeInfo {
     /**
      * @return the moves
      */
-    public List<Movimiento> getMoves() {
+    public List<Movement> getMoves() {
         return moves;
     }
 }

@@ -20,7 +20,7 @@ public class Trainer {
     private String name;
     private List<Pokemon> pokemons;
     private Pokemon activePokemon;
-    private Movimiento nextMove;
+    private Movement nextMove;
     
     public List<Pokemon> getTeam(){
         return pokemons;
@@ -31,7 +31,7 @@ public class Trainer {
     public Pokemon getActivePokemon() {
         return activePokemon;
     }
-    public Movimiento getNextMove() {
+    public Movement getNextMove() {
         return nextMove;
     }
 
@@ -70,7 +70,7 @@ public class Trainer {
         */
     }
 
-    public void setNextMove(Movimiento move)
+    public void setNextMove(Movement move)
     {
         nextMove = move;
     }

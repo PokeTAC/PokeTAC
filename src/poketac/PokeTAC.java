@@ -11,7 +11,7 @@ import java.util.Random;
 import modelo.Battle;
 import modelo.Trainer;
 import modelo.Pokemon;
-import modelo.Movimiento;
+import modelo.Movement;
 import modelo.PokeInfo;
 
 /**
@@ -131,13 +131,13 @@ public class PokeTAC {
             
             PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
             
-            List<Movimiento> moves = new ArrayList<>();
+            List<Movement> moves = new ArrayList<>();
             
             for (int j = 0; j < MAX_MOVES; j++) {
                 
-                List<Movimiento> pokeMoves = pokemon.getMoves();
+                List<Movement> pokeMoves = pokemon.getMoves();
                 
-                Movimiento move = pokeMoves.get(rnd.nextInt(pokeMoves.size()));              
+                Movement move = pokeMoves.get(rnd.nextInt(pokeMoves.size()));              
                 
                 moves.add(move);
             }
@@ -200,13 +200,13 @@ public class PokeTAC {
             
             PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
             
-            List<Movimiento> moves = new ArrayList<>();
+            List<Movement> moves = new ArrayList<>();
             
             for (int j = 0; j < MAX_MOVES; j++) {
                 
-                List<Movimiento> pokeMoves = pokemon.getMoves();
+                List<Movement> pokeMoves = pokemon.getMoves();
                 
-                Movimiento move = pokeMoves.get(rnd.nextInt(pokeMoves.size()));              
+                Movement move = pokeMoves.get(rnd.nextInt(pokeMoves.size()));              
                 
                 moves.add(move);
             }
