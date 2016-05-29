@@ -85,4 +85,7 @@ public class PokeInfo {
     public List<Movement> getMoves() {
         return moves;
     }
+    public void setMoves(List<Movement> moves){
+        this.moves=moves;
+    }
 }
