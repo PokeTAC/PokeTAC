@@ -12,23 +12,23 @@ import java.util.List;
  *
  * @author DiegoAndres
  */
-public class Entrenador {
+public class Trainer {
     
     static int counter = 0;
     
     private int id;
     private String name;
-    private List<InstanciaPokemon> pokemons;
-    private InstanciaPokemon activePokemon;
+    private List<Pokemon> pokemons;
+    private Pokemon activePokemon;
     private Movimiento nextMove;
     
-    public List<InstanciaPokemon> getTeam(){
+    public List<Pokemon> getTeam(){
         return pokemons;
     }
-    public void setTeam(List<InstanciaPokemon> pokemonTeam) {
+    public void setTeam(List<Pokemon> pokemonTeam) {
         pokemons = pokemonTeam;
     }
-    public InstanciaPokemon getActivePokemon() {
+    public Pokemon getActivePokemon() {
         return activePokemon;
     }
     public Movimiento getNextMove() {
@@ -41,14 +41,14 @@ public class Entrenador {
     
     
     
-    public Entrenador(String name)
+    public Trainer(String name)
     {
         id = counter++;
         
         this.name = name;        
     }
     
-    public void changePokemon(InstanciaPokemon pokemon)
+    public void changePokemon(Pokemon pokemon)
     {
         activePokemon = pokemon;
         /*

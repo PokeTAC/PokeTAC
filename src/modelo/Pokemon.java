@@ -5,6 +5,7 @@
  */
 package modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,16 +13,20 @@ import java.util.List;
  * @author DiegoAndres
  */
 public class Pokemon {
+    static int counter = 0;
+    
     private int id;
-    private String nombre;
-    private int hp;
-    private int ataque;
-    private int defensa;
-    private int velocidad;
-    
-    private List<Tipo> tipos;
-    
+    private String name;
+    private PokeInfo pokeInfo;
+    private int hitPoints;
+    private int idEntrenador;
     private List<Movimiento> moves;
+    
+    private List<Effect> activeEffects;
+
+    
+    
+    
 
     public int getId() {
         return id;
@@ -32,57 +37,73 @@ public class Pokemon {
     }
 
     public String getNombre() {
-        return nombre;
+        return name;
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    
-    public int getHp() {
-        return hp;
+        this.name = nombre;
     }
 
-    public void setHp(int hp) {
-        this.hp = hp;
+    public PokeInfo getIdPokemon() {
+        return pokeInfo;
     }
 
-    public int getAtaque() {
-        return ataque;
+    public void setIdPokemon(PokeInfo pokemon) {
+        this.pokeInfo = pokemon;
     }
 
-    public void setAtaque(int ataque) {
-        this.ataque = ataque;
+    public int getIdEntrenador() {
+        return idEntrenador;
     }
 
-    public int getDefensa() {
-        return defensa;
+    public void setIdEntrenador(int idEntrenador) {
+        this.idEntrenador = idEntrenador;
     }
 
-    public void setDefensa(int defensa) {
-        this.defensa = defensa;
-    }
-
-    public int getVelocidad() {
-        return velocidad;
-    }
-
-    public void setVelocidad(int velocidad) {
-        this.velocidad = velocidad;
-    }
-
-    public List<Tipo> getTipos() {
-        return tipos;
-    }
-
-    public void setTipos(List<Tipo> tipos) {
-        this.tipos = tipos;
-    }
-
-    /**
-     * @return the moves
-     */
-    public List<Movimiento> getMoves() {
+    public List<Movimiento> getMovimientos() {
         return moves;
     }
+
+    public void setMovimientos(List<Movimiento> movimientos) {
+        this.moves = movimientos;
+    }
+
+    public int getHitPoints() {
+        return hitPoints;
+    }
+
+    public void setHitPoints(int hitPoints) {
+        
+        if (hitPoints < 0)
+            this.hitPoints = 0;
+        else
+            this.hitPoints = hitPoints;
+    }
+    
+    public PokeInfo getPokeInfo()
+    {
+        return pokeInfo;
+    }
+    
+    public Pokemon(PokeInfo pokemon, List<Movimiento> moves)
+    {
+        id = counter++;
+        
+        this.pokeInfo = pokemon;
+        
+        this.moves = moves;
+        
+        this.activeEffects = new ArrayList<Effect>();
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

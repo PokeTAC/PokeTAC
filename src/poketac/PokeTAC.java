@@ -8,11 +8,11 @@ package poketac;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import modelo.Batalla;
-import modelo.Entrenador;
-import modelo.InstanciaPokemon;
-import modelo.Movimiento;
+import modelo.Battle;
+import modelo.Trainer;
 import modelo.Pokemon;
+import modelo.Movimiento;
+import modelo.PokeInfo;
 
 /**
  *
@@ -47,7 +47,7 @@ public class PokeTAC {
             while (!pokeTAC.activeBattle.isBattlerOver())
             {
                 
-                Entrenador nextTrainer = pokeTAC.activeBattle.nextTrainer();
+                Trainer nextTrainer = pokeTAC.activeBattle.nextTrainer();
 
                 if (nextTrainer==pokeTAC.aiTrainer)
                 {
@@ -90,11 +90,11 @@ public class PokeTAC {
     final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
     
     // << InternalFields >>
-    List<Pokemon> pokemonDB;
+    List<PokeInfo> pokemonDB;
     
-    Batalla activeBattle;
-    Entrenador userTrainer;
-    Entrenador aiTrainer;
+    Battle activeBattle;
+    Trainer userTrainer;
+    Trainer aiTrainer;
     
     Random rnd;
     
@@ -108,8 +108,8 @@ public class PokeTAC {
         //Crear todo lo necesario para el AI
         //createAI();
         
-        userTrainer = new Entrenador(username);
-        aiTrainer = new Entrenador("IA");
+        userTrainer = new Trainer(username);
+        aiTrainer = new Trainer("IA");
         
         rnd = new Random();
        
@@ -125,11 +125,11 @@ public class PokeTAC {
     //Aqui se selecciona los pokemons para la IA
     private void selectAITeam()
     {
-        List<InstanciaPokemon> ipokemons = new ArrayList<>();
+        List<Pokemon> ipokemons = new ArrayList<>();
         
         for (int i = 0; i < MAX_POKEMON; i++) {
             
-            Pokemon pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
+            PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
             
             List<Movimiento> moves = new ArrayList<>();
             
@@ -142,7 +142,7 @@ public class PokeTAC {
                 moves.add(move);
             }
             
-            ipokemons.add(new InstanciaPokemon(pokemon,moves));
+            ipokemons.add(new Pokemon(pokemon,moves));
         }
                 
         aiTrainer.setTeam(ipokemons);
@@ -150,7 +150,7 @@ public class PokeTAC {
     
     private void initBattle()
     {
-        activeBattle = new Batalla(userTrainer,aiTrainer);
+        activeBattle = new Battle(userTrainer,aiTrainer);
     }
  
     private void selectAIMove()
@@ -194,11 +194,11 @@ public class PokeTAC {
 
     private void askUserTeam() {
         
-        List<InstanciaPokemon> ipokemons = new ArrayList<>();
+        List<Pokemon> ipokemons = new ArrayList<>();
         
         for (int i = 0; i < MAX_POKEMON; i++) {
             
-            Pokemon pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
+            PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
             
             List<Movimiento> moves = new ArrayList<>();
             
@@ -211,7 +211,7 @@ public class PokeTAC {
                 moves.add(move);
             }
             
-            ipokemons.add(new InstanciaPokemon(pokemon,moves));
+            ipokemons.add(new Pokemon(pokemon,moves));
         }
         
         userTrainer.setTeam(ipokemons);

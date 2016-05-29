@@ -10,21 +10,45 @@ package modelo;
  * @author DiegoAndres
  */
 public class Movimiento {
+    
+    private static int counter = 0;
+    
     private int id;
-    private String nombre;
+    private String name;
     private int base_power;
     private int accuracy;
-    private int idTipo;
+    private PokeType pokeType;
+    private Effect pokeEffect;
     
-    // efectos adicionales
-    private boolean dormir;
-    private boolean disminuir_velocidad;
-    private boolean disminuir_ataque;
-    
-    
-    public int getBasePower()
-    {
+    public int getBasePower()    {
         return base_power;
     }
+    public Effect getPokeEffect() {
+        return pokeEffect;
+    }
+    public String getName() {
+        return name;
+    }
+    public int getAccuracy() {
+        return accuracy;
+    }
+    public PokeType getPokeType() {
+        return pokeType;
+    }
+    
+    
+    public Movimiento(String name, int basePower, int accuracy, PokeType pokeType, Effect pokeEffect)
+    {
+        this.id = counter++; 
+        this.name = name;
+        this.base_power = basePower;
+        this.accuracy = accuracy;
+        this.pokeType = pokeType;
+        this.pokeEffect = pokeEffect;
+    }
+
+
     
 }
+
+
