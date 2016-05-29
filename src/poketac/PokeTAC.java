@@ -14,6 +14,7 @@ import modelo.Pokemon;
 import modelo.Movement;
 import modelo.PokeInfo;
 import modelo.PokeType;
+import modelo.EffectInfo;
 import java.io.*;
 
 /**
@@ -113,14 +114,6 @@ public class PokeTAC {
             e.printStackTrace();
             
         }
-        try {
-            loadDataPokeMovements();
-        }
-        catch(IOException e){
-            System.out.println("error:PokeMovements loader");
-            e.printStackTrace();
-        }
-        
         //Crear todo lo necesario para el AI
         //createAI();
         
@@ -129,9 +122,6 @@ public class PokeTAC {
         
         rnd = new Random();
        
-    }
-    private void loadDataPokeMovements() throws IOException{
-        
     }
     private void loadDataPokeInfo()throws IOException
     {
@@ -191,9 +181,16 @@ public class PokeTAC {
         for (int i = 0; i < MAX_POKEMON; i++) {
             
             PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
+           
+            try {
+                loadDataPokeMovements(pokemon);
+            }
+            catch(IOException e){
+                System.out.println("error:PokeMovements loader");
+                e.printStackTrace();
+            }
             
             List<Movement> moves = new ArrayList<>();
-            
             for (int j = 0; j < MAX_MOVES; j++) {
                 
                 List<Movement> pokeMoves = pokemon.getMoves();
@@ -262,7 +259,13 @@ public class PokeTAC {
             PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
             
             List<Movement> moves = new ArrayList<>();
-            
+            try {
+                loadDataPokeMovements(pokemon);
+            }
+            catch(IOException e){
+                System.out.println("error:PokeMovements loader");
+                e.printStackTrace();
+            }
             for (int j = 0; j < MAX_MOVES; j++) {
                 
                 List<Movement> pokeMoves = pokemon.getMoves();
@@ -278,7 +281,67 @@ public class PokeTAC {
         userTrainer.setTeam(ipokemons);
                 
     }
-    
+    private void loadDataPokeMovements(PokeInfo pokemon) throws IOException{
+        FileReader reader;
+        File arch=null;
+        String route="./Files/";
+        String fname="a_"+pokemon.getNombre();
+        route=route+fname+".txt";
+        String line1,line2,line3;
+        BufferedReader br;
+        arch=new File(route);
+        reader=new FileReader(arch);
+        br=null;
+        br=new BufferedReader(reader);
+        int max_pokeMoves=8;
+        Movement newMove;
+        ArrayList<Movement> movements=new ArrayList<>();
+        PokeType single_type;
+        String[]values;
+        int[] converted_value;
+        int baseD,acc;
+        EffectInfo effect = null;
+        for(int i=0;i<max_pokeMoves;i++){
+            line1=br.readLine();//name
+            line2=br.readLine();//type
+            line3=br.readLine();//values
+            single_type=new PokeType();
+            single_type.setNombre(line2);
+            values=line3.split(" ");
+            converted_value=new int[values.length];
+            if(values.length==3){//this means it have an effect
+                for(int j=0;j<(values.length-1);j++){
+                    converted_value[j]=Integer.parseInt(values[j]);
+                }
+
+                switch(values[values.length-1]){//last one on this line is the effect type
+                    case "P":
+                        effect= EffectInfo.Paralyze;
+                        break;
+                    case "D":
+                        effect=EffectInfo.Sleep;
+                        break;
+                    case "E":
+                        effect=EffectInfo.Poison;
+                        break;
+                }
+                
+            }
+            else{//doesn't have an effect
+                for(int j=0;j<(values.length);j++){
+                    converted_value[j]=Integer.parseInt(values[j]);
+                }
+                effect=EffectInfo.None;
+                
+            }
+            baseD=converted_value[0];
+            acc=converted_value[1];
+            newMove=new Movement(line1,baseD,acc,single_type,effect);
+            movements.add(newMove);
+        }
+        reader.close();
+        pokemon.setMoves(movements);
+    }
     
     
 }
