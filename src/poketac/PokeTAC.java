@@ -13,6 +13,8 @@ import modelo.Trainer;
 import modelo.Pokemon;
 import modelo.Movement;
 import modelo.PokeInfo;
+import modelo.PokeType;
+import java.io.*;
 
 /**
  *
@@ -103,7 +105,21 @@ public class PokeTAC {
     private void initGame(String username)
     {
         //Cargar datos de archivo
-        loadData();
+        try {
+            loadDataPokeInfo();
+        }
+        catch(IOException e){
+            System.out.println("error:PokeInfo loader");
+            e.printStackTrace();
+            
+        }
+        try {
+            loadDataPokeMovements();
+        }
+        catch(IOException e){
+            System.out.println("error:PokeMovements loader");
+            e.printStackTrace();
+        }
         
         //Crear todo lo necesario para el AI
         //createAI();
@@ -114,12 +130,57 @@ public class PokeTAC {
         rnd = new Random();
        
     }
-    
-    private void loadData()
-    {
-        pokemonDB = new ArrayList<>();
+    private void loadDataPokeMovements() throws IOException{
         
-        //................ Cargar data
+    }
+    private void loadDataPokeInfo()throws IOException
+    {
+        //................ Cargar data pokeInfo
+        pokemonDB = new ArrayList<PokeInfo>();
+        FileReader reader;
+        File arch=null;
+        String line1,line2,line3;
+        BufferedReader br;
+        arch=new File("./Files/pokedex.txt");
+        reader=new FileReader(arch);
+        br=null;
+        br=new BufferedReader(reader);
+        PokeInfo newPoke;
+        ArrayList<PokeType> types;
+        PokeType single_type;
+        int numPokemon=20;
+        String[]values;
+        int[] converted_value;
+        String[]arr_types;
+        for(int i=0;i<numPokemon;i++){
+            line1=br.readLine();
+            line2=br.readLine();
+            line3=br.readLine();
+            newPoke= new PokeInfo();
+            types=new ArrayList<PokeType>();
+            newPoke.setNombre(line1);
+            arr_types=line2.split("/");
+            
+            for(int j=0;j<arr_types.length;j++){
+                single_type=new PokeType();
+                single_type.setNombre(arr_types[j]);
+                types.add(single_type);
+            }
+            newPoke.setTipos(types);
+            
+            values=line3.split(" ");
+            converted_value=new int[values.length];
+            for(int k=0;k<values.length;k++){
+                converted_value[k] = Integer.parseInt(values[k]);
+            }
+            newPoke.setHp(converted_value[0]);
+            newPoke.setAtaque(converted_value[1]);
+            newPoke.setDefensa(converted_value[2]);
+            newPoke.setVelocidad(converted_value[5]);
+            pokemonDB.add(newPoke);
+        }
+        reader.close();
+        //................ fin Cargar data pokeInfo
     }
     
     //Aqui se selecciona los pokemons para la IA
