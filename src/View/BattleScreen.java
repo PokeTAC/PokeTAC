@@ -6,6 +6,7 @@
 package View;
 
 import java.awt.event.ActionEvent;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.JOptionPane;
@@ -46,24 +47,39 @@ public class BattleScreen extends javax.swing.JPanel{
     }
     
     public void advanceTurn(){
-        logicMan.getBattle().proccessTurnLogic();
+        List<String> log = logicMan.getBattle().proccessTurnLogic();
+        updateLog(log);
         updatePokemonDisplay();
         
         repaint();
         if(logicMan.getBattle().isBattlerOver()){
-            JOptionPane.showMessageDialog(pnlActions, "Juego terminado.");
+            int i = JOptionPane.showConfirmDialog(pnlActions, "Juego terminado. ¿Desea jugar otra vez?", "Juego terminado", JOptionPane.YES_NO_OPTION);
+            if(i==0){
+                mw.restart();
+            }else{
+                mw.dispose();
+            }
         }else{
             if(!logicMan.isUserTurn()){
-                Movement mov = logicMan.selectAIMove();
-                //Movement mov = logicMan.selectAIMinMaxMove();
+                Movement mov;
                 
+                switch(mw.getAIType()){
+                    case MINMAX:
+                        mov = logicMan.selectAIMinMaxMove();
+                        break;
+                    case ALEATORIO:
+                    default:
+                         mov = logicMan.selectAIMove();
+                }
+                
+                             
                 Pokemon p = logicMan.getBattle().getEntrenadores().get(1).getActivePokemon();
                 if(mov!=null){
-                    String log = txtaLog.getText() + p.getPokeInfo().getNombre() + " usó " + mov.getName() + ".\n";
-                    txtaLog.setText(log);
+                    String str = txtaLog.getText() + p.getPokeInfo().getNombre() + " usó " + mov.getName() + ".\n";
+                    txtaLog.setText(str);
                 }else{
-                    String log = txtaLog.getText() + "La computadora cambió de Pokemon a: " + p.getPokeInfo().getNombre() + ".\n";
-                    txtaLog.setText(log);
+                    String str = txtaLog.getText() + "La computadora cambió de Pokemon a: " + p.getPokeInfo().getNombre() + ".\n";
+                    txtaLog.setText(str);
                 }
                 advanceTurn();
             }
@@ -73,6 +89,12 @@ public class BattleScreen extends javax.swing.JPanel{
     private void updatePokemonDisplay(){
         pc.setPokemon(logicMan.getBattle().getEntrenadores().get(1).getActivePokemon());
         user.setPokemon(logicMan.getBattle().getEntrenadores().get(0).getActivePokemon());
+    }
+    
+    private void updateLog(List<String> log){
+        for(String s : log){
+            txtaLog.setText(txtaLog.getText() + s + "\n");
+        }
     }
     
     

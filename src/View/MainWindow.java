@@ -7,6 +7,7 @@ package View;
 
 import java.awt.BorderLayout;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import modelo.Pokemon;
 import poketac.PokeTAC;
@@ -16,16 +17,20 @@ import poketac.PokeTAC;
  * @author Usuario
  */
 public class MainWindow extends javax.swing.JFrame {
-    PokeTAC logicMan;
-    JPanel prevPanel;
+    private PokeTAC logicMan;
+    private JPanel prevPanel;
+    private AIType aiType = AIType.ALEATORIO;
+    
+    public enum AIType{
+        ALEATORIO, MINMAX;
+    }
 
-    /**
-     * Creates new form MainWindow
-     */
     public MainWindow() {
         logicMan = new PokeTAC();
         initComponents();
         this.setLocationRelativeTo(null);
+        DefaultComboBoxModel<AIType> model = new DefaultComboBoxModel<>(AIType.values());
+        cbAITypes.setModel(model);
     }
     
     public void startBattle(List<Pokemon> userPokemons){
@@ -35,6 +40,16 @@ public class MainWindow extends javax.swing.JFrame {
         prevPanel = bscreen;
         pnlBackground.add(bscreen, BorderLayout.CENTER);
         this.revalidate();
+    }
+    
+    public void restart(){
+        pnlBackground.remove(prevPanel);
+        pnlBackground.add(pnlWelcome,BorderLayout.CENTER);
+        this.revalidate();
+    }
+    
+    public AIType getAIType(){
+        return aiType;
     }
     
 
@@ -51,7 +66,10 @@ public class MainWindow extends javax.swing.JFrame {
         pnlWelcome = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         txtName = new javax.swing.JTextField();
+        cbAITypes = new javax.swing.JComboBox();
+        jLabel2 = new javax.swing.JLabel();
         btnStart = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -62,17 +80,32 @@ public class MainWindow extends javax.swing.JFrame {
 
         pnlWelcome.setLayout(new java.awt.GridBagLayout());
 
-        jPanel1.setLayout(new java.awt.BorderLayout(0, 10));
+        jPanel1.setLayout(new java.awt.BorderLayout(0, 15));
 
         jLabel1.setFont(new java.awt.Font("Calibri", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Bienvenido a PokeTAC");
         jPanel1.add(jLabel1, java.awt.BorderLayout.NORTH);
 
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
         txtName.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         txtName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtName.setText("Jugador1");
-        jPanel1.add(txtName, java.awt.BorderLayout.CENTER);
+        jPanel2.add(txtName, java.awt.BorderLayout.NORTH);
+
+        cbAITypes.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        cbAITypes.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel2.add(cbAITypes, java.awt.BorderLayout.PAGE_END);
+
+        jLabel2.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Escoger IA:");
+        jLabel2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jLabel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        jPanel2.add(jLabel2, java.awt.BorderLayout.CENTER);
+
+        jPanel1.add(jPanel2, java.awt.BorderLayout.CENTER);
 
         btnStart.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         btnStart.setText("Comenzar");
@@ -94,6 +127,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
         logicMan.initGame(txtName.getText());
+        aiType = (AIType)cbAITypes.getSelectedItem();
         pnlBackground.remove(pnlWelcome);
         PokemonSelect pnl = new PokemonSelect(this, logicMan.getAllPokemons(), true);
         prevPanel = pnl;
@@ -138,8 +172,11 @@ public class MainWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnStart;
+    private javax.swing.JComboBox cbAITypes;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel pnlBackground;
     private javax.swing.JPanel pnlWelcome;
     private javax.swing.JTextField txtName;

@@ -375,7 +375,7 @@ public class PokeTAC {
         br=null;
         br=new BufferedReader(reader);
         String[]values;
-        int max_types=17;
+        int max_types=18;
         String d_value;
         double value;
         List<PokeType> pokeTypes = new ArrayList();

@@ -70,25 +70,29 @@ public class Battle {
     }
     
     
-    public void proccessTurnLogic()
+    public List<String> proccessTurnLogic()
     {
+        List<String> log = new ArrayList<>();
         Trainer trainer = nextTrainer();
         Trainer trainerOp; if (nextToMove==0) trainerOp = trainers.get(1); else trainerOp = trainers.get(0);
         
+        PokeInfo pokeInfo = trainer.getActivePokemon().getPokeInfo();
+        PokeInfo pokeInfoOp = trainerOp.getActivePokemon().getPokeInfo();
+        
         //Si el siguiente movimiento es null (hizo cambio de pokemon), pasar el turno
         if (trainer.getNextMove()!=null)
-        {
+        {      
             //Verificar si se puede mover
             boolean canPlay = true;
             for (Effect effect : trainer.getActivePokemon().getActiveEffects())
-                if (effect.getEffectInfo()==EffectInfo.Paralyze || effect.getEffectInfo()==EffectInfo.Sleep)
-                    {canPlay = false; break;}
+                if (effect.getEffectInfo()==EffectInfo.Paralyze || effect.getEffectInfo()==EffectInfo.Sleep){
+                    log.add(pokeInfo.getNombre() + " no se puede mover!");
+                    canPlay = false; 
+                    break;
+                }
             
             if (canPlay)
             {
-                PokeInfo pokeInfo = trainer.getActivePokemon().getPokeInfo();
-                PokeInfo pokeInfoOp = trainerOp.getActivePokemon().getPokeInfo();
-
                 //== Procesar daño
                 double probabilytie = (((double)pokeInfo.getVelocidad()*2/(double)pokeInfoOp.getVelocidad())*((double)trainer.getNextMove().getAccuracy())/100);
                 Random rnd = new Random();
@@ -101,12 +105,15 @@ public class Battle {
                     double multiplier = trainer.getNextMove().getPokeType().getMultiplier(trainerOp.getActivePokemon().getPokeInfo().getPokeTypes());
                     damage *= multiplier;
                     //Nuevo hitpoints
-                    int newHitPoints = (int)(trainer.getActivePokemon().getHitPoints() - damage);
+                    int newHitPoints = (int)(trainerOp.getActivePokemon().getHitPoints() - damage);
                     trainerOp.getActivePokemon().setHitPoints(newHitPoints);
+                    log.add(pokeInfoOp.getNombre() + " recibió " + damage + " puntos de daño.");
 
                     //== Procesar efecto
                     EffectInfo effect = trainer.getNextMove().getPokeEffect();
                     trainerOp.getActivePokemon().activateEffect(effect);
+                }else{
+                    log.add(pokeInfo.getNombre() + " falló!");
                 }                
             }
 
@@ -122,7 +129,8 @@ public class Battle {
             
             //Verificar si el poquemon murio y cambiarlo por otro vivo
             if (trainerOp.getActivePokemon().getHitPoints()==0)
-            {                
+            {
+                log.add(pokeInfoOp.getNombre() + " perdió el conocimiento.");
                 List<Pokemon> pokeTeamOp = trainerOp.getTeam();
                 
                 for (int i = 0; i < pokeTeamOp.size(); i++) {
@@ -139,6 +147,7 @@ public class Battle {
         
         
         nextToMove++; if (nextToMove==trainers.size()) nextToMove = 0;
+        return log;
     }
     
     public boolean isBattlerOver()
@@ -165,7 +174,7 @@ public class Battle {
     private static void ProccessEffects(Trainer trainer) {
         
         List<Effect> effects = trainer.getActivePokemon().getActiveEffects();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < effects.size(); i++) {
                         //En caso de veneno
             if (effects.get(i).getEffectInfo()==EffectInfo.Poison){
                 trainer.getActivePokemon().setHitPoints(trainer.getActivePokemon().getHitPoints()-effects.get(i).getEffectInfo().POISON_DAMAGE);
