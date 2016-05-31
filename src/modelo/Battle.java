@@ -45,6 +45,10 @@ public class Battle {
         nextToMove = 0;
     }
     
+    public Battle(Battle oBattle){
+        
+    }
+    
     
     // << ExternalMethods >>
     

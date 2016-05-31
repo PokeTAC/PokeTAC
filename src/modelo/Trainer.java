@@ -74,5 +74,12 @@ public class Trainer {
     {
         nextMove = move;
     }
+
+    @Override
+    public String toString() {
+        return name; //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
     
 }

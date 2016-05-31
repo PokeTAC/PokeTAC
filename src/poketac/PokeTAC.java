@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import modelo.Battle;
+import MinMaxAlgorithm.MinMaxAlgo;
+import MinMaxAlgorithm.PokeState;
 import modelo.Trainer;
 import modelo.Pokemon;
 import modelo.Movement;
@@ -24,6 +26,7 @@ import java.io.*;
  */
 public class PokeTAC {
     private static final String FILE_DIR = "Files/";
+    private MinMaxAlgo mmAlgo;
 
     /**
      * @param args the command line arguments
@@ -96,6 +99,7 @@ public class PokeTAC {
     
     public static final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
     public static final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
+    public static final int MAX_DEPTH = 10;
     
     // << InternalFields >>
     List<PokeInfo> pokemonDB;
@@ -124,6 +128,7 @@ public class PokeTAC {
         
         userTrainer = new Trainer(username);
         aiTrainer = new Trainer("IA");
+        mmAlgo = new MinMaxAlgo(MAX_DEPTH);
         
         rnd = new Random();
        
@@ -227,6 +232,11 @@ public class PokeTAC {
             //Escojer ataque
             aiTrainer.setNextMove(aiTrainer.getActivePokemon().getMovimientos().get(MAX_MOVES-1));
         }     
+    }
+    
+    public void selectAIMinMaxMove(){
+        PokeState state  = (PokeState)mmAlgo.getNextMove(new PokeState(new Battle(activeBattle)), true);
+        aiTrainer.setNextMove(state.getChosenMove());
     }
     
     private void endBattle()

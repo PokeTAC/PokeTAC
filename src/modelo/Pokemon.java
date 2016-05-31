@@ -114,6 +114,17 @@ public class Pokemon {
         
         activeEffects.add(new Effect(effect, effect.EFFECT_DURATION));
     }
+
+    @Override
+    public String toString() {
+        String str = pokeInfo.getNombre();
+        str += " HP: " + hitPoints + "/" + pokeInfo.getHp();
+        str += " Tipo: ";
+        for(PokeType t : pokeInfo.getPokeTypes()) str+= t.getName() + "/";
+        str = str.substring(0, str.length()-1);
+        return str; 
+    }
+    
   
     
 }

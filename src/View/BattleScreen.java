@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import modelo.Movement;
 import modelo.Pokemon;
+import modelo.Trainer;
 import poketac.PokeTAC;
 
 /**
@@ -100,6 +101,11 @@ public class BattleScreen extends javax.swing.JPanel{
         pnlActions.add(btnFight);
 
         btnPKMN.setText("PKMN");
+        btnPKMN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPKMNActionPerformed(evt);
+            }
+        });
         pnlActions.add(btnPKMN);
 
         btnQuit.setText("QUIT");
@@ -129,14 +135,32 @@ public class BattleScreen extends javax.swing.JPanel{
                 menu.add(new AbstractAction("" + mov) {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        String log = txtaLog.getText() + p.getPokeInfo().getNombre() + " usó " + mov.getName() + ".\n";
+                        txtaLog.setText(log);
                         logicMan.getBattle().getEntrenadores().get(0).setNextMove(mov);
                         advanceTurn();
                     }
                 });
             }
-            menu.show(btnFight, btnFight.getX(), btnFight.getY());
+            menu.show(btnFight, btnFight.getX() - menu.getWidth(), btnFight.getY());
         }   
     }//GEN-LAST:event_btnFightActionPerformed
+
+    private void btnPKMNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPKMNActionPerformed
+        if(logicMan.isUserTurn()){
+            Trainer t = logicMan.getBattle().getEntrenadores().get(0);
+            PokemonChange pokeChange = new PokemonChange(mw, true, t.getTeam());
+            Pokemon selectedPokemon = pokeChange.displayPokemonChange();
+            if(selectedPokemon!=null && selectedPokemon.getId()!=user.getPokemon().getId()){
+                int index = t.getTeam().indexOf(selectedPokemon);
+                t.changePokemon(index);
+                user.setPokemon(selectedPokemon);
+                String log = txtaLog.getText() + t + " cambió de Pokemon a: " + selectedPokemon.getPokeInfo().getNombre() + ".\n";
+                txtaLog.setText(log);
+                advanceTurn();
+            }
+        }   
+    }//GEN-LAST:event_btnPKMNActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

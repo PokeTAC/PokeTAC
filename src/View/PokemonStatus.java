@@ -13,7 +13,7 @@ import modelo.Pokemon;
  * @author Usuario
  */
 public class PokemonStatus extends javax.swing.JPanel {
-    Pokemon p;
+    private Pokemon p;
 
     /**
      * Creates new form PokemonStatus
