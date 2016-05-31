@@ -20,7 +20,7 @@ import poketac.PokeTAC;
  * @author Usuario
  */
 public class BattleScreen extends javax.swing.JPanel{
-    private MainWindow mw;
+    private final MainWindow mw;
     private final PokeTAC logicMan;
     private PokemonStatus pc;
     private PokemonStatus user;
@@ -47,15 +47,32 @@ public class BattleScreen extends javax.swing.JPanel{
     
     public void advanceTurn(){
         logicMan.getBattle().proccessTurnLogic();
+        updatePokemonDisplay();
+        
         repaint();
         if(logicMan.getBattle().isBattlerOver()){
             JOptionPane.showMessageDialog(pnlActions, "Juego terminado.");
         }else{
             if(!logicMan.isUserTurn()){
-                logicMan.selectAIMove();
+                Movement mov = logicMan.selectAIMove();
+                //Movement mov = logicMan.selectAIMinMaxMove();
+                
+                Pokemon p = logicMan.getBattle().getEntrenadores().get(1).getActivePokemon();
+                if(mov!=null){
+                    String log = txtaLog.getText() + p.getPokeInfo().getNombre() + " usó " + mov.getName() + ".\n";
+                    txtaLog.setText(log);
+                }else{
+                    String log = txtaLog.getText() + "La computadora cambió de Pokemon a: " + p.getPokeInfo().getNombre() + ".\n";
+                    txtaLog.setText(log);
+                }
                 advanceTurn();
             }
         }
+    }
+    
+    private void updatePokemonDisplay(){
+        pc.setPokemon(logicMan.getBattle().getEntrenadores().get(1).getActivePokemon());
+        user.setPokemon(logicMan.getBattle().getEntrenadores().get(0).getActivePokemon());
     }
     
     

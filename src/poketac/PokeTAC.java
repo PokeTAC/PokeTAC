@@ -266,26 +266,42 @@ public class PokeTAC {
         activeBattle = new Battle(userTrainer,aiTrainer);
     }
  
-    public void selectAIMove()
+    public Movement selectAIMove()
     {
-        if (rnd.nextBoolean())
+        int counter = 0;
+        for(Pokemon p : aiTrainer.getTeam()){
+            if(p.getHitPoints()>0) counter++;
+        }
+        
+        if (counter>1 && rnd.nextBoolean())
         {
             //CambiarPokemon
-            aiTrainer.changePokemon(rnd.nextInt(MAX_POKEMON));
+            int index = rnd.nextInt(MAX_POKEMON);
+            Pokemon selPoke = null;
+            while(index == aiTrainer.getActivePokemonIndex() || selPoke == null || selPoke.getHitPoints()==0){
+                index = rnd.nextInt(MAX_POKEMON);
+                selPoke = aiTrainer.getTeam().get(index);
+            }
+            aiTrainer.changePokemon(index);
+            return null;
         }
         else
         {
             //Escojer ataque
-            aiTrainer.setNextMove(aiTrainer.getActivePokemon().getMovimientos().get(MAX_MOVES-1));
+            Movement m = aiTrainer.getActivePokemon().getMovimientos().get(rnd.nextInt(MAX_MOVES));
+            aiTrainer.setNextMove(m);
+            return m;
         }     
     }
     
-    public void selectAIMinMaxMove(){
+    public Movement selectAIMinMaxMove(){
         PokeState state  = (PokeState)mmAlgo.getNextMove(new PokeState(new Battle(activeBattle)), true);
         if(state.getChosenMove()!= null){
             aiTrainer.setNextMove(state.getChosenMove());
+            return state.getChosenMove();
         }else{
             aiTrainer.changePokemon(state.getBattle().getEntrenadores().get(1).getActivePokemonIndex());
+            return null;
         }
         
     }
@@ -346,6 +362,7 @@ public class PokeTAC {
         userTrainer.setTeam(ipokemons);
                 
     }
+    
     private List<PokeType> loadDataPokemonMultipliers() throws IOException{
         FileReader reader;
         File arch=null;

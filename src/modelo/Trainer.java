@@ -69,23 +69,6 @@ public class Trainer {
     public void changePokemon(int index)
     {
         activePokemon = index;
-        /*
-        if (pokemons.contains(pokemon))
-        {
-            if (pokemon.getHitPoints()>0)
-            {
-                
-            }
-            else
-            {
-                //throw new Exception("Pokemon no tiene vida restante.");
-            }
-        }
-        else
-        {
-            //throw new Exception("Pokemon no pertenece al equipo.");
-        }
-        */
     }
 
     public void setNextMove(Movement move)

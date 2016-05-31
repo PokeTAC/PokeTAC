@@ -129,17 +129,23 @@ public class Battle {
     
     public boolean isBattlerOver()
     {
+        boolean result = true;
+        
         for (Trainer trainer : trainers)
         {
+            result = true;
+            
             List<Pokemon> ipokemons = trainer.getTeam();
             
             for (Pokemon ipokemon : ipokemons)
             {
-                if (ipokemon.getHitPoints()>0) return false;
+                if (ipokemon.getHitPoints()>0) result = false;
             }
+            
+            if(result == true) return result;
         }
         
-        return true;
+        return result;
     }
 
     private static void ProccessEffects(Trainer trainer) {
