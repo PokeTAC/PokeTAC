@@ -19,6 +19,7 @@ import modelo.PokeInfo;
 import modelo.PokeType;
 import modelo.EffectInfo;
 import java.io.*;
+import java.util.Map;
 
 /**
  *
@@ -121,6 +122,40 @@ public class PokeTAC {
         catch(IOException e){
             System.out.println("error:PokeInfo loader");
             e.printStackTrace();
+            
+        }
+        //load the list of maps of every type and its multipliers
+        List<Map<PokeType,Double>> listMaps=null;
+        try {
+            listMaps=loadDataPokemonMultipliers();
+        }
+        catch(IOException e){
+            System.out.println("error:PokeMultiplier loader");
+            e.printStackTrace();
+            
+        }
+        List<PokeType>types;
+        //for each pokemon on pokemonDB we set its movements and multipliers
+        for(int i=0;i<pokemonDB.size();i++){
+            
+            try {
+                    loadDataPokeMovements(pokemonDB.get(i));
+                }
+                catch(IOException e){
+                    System.out.println("error:PokeMovements loader");
+                    e.printStackTrace();
+                }
+            //assign each type its multiplier
+            types=pokemonDB.get(i).getPokeTypes();
+            for(int j=0;j<types.size();j++){
+                for(int h=0;h<17;h++){
+                    if(((listMaps.get(h)).get(types.get(j)))!=null){//it found the type on the listMap
+                        types.get(j).SetMultiplicators(listMaps.get(h));
+                        break;
+                    }
+                }
+                
+            }
             
         }
         //Crear todo lo necesario para el AI
@@ -300,7 +335,42 @@ public class PokeTAC {
         userTrainer.setTeam(ipokemons);
                 
     }
-    
+    private List<Map<PokeType,Double>> loadDataPokemonMultipliers() throws IOException{
+        FileReader reader;
+        File arch=null;
+        String route=FILE_DIR;
+        String fname="types.txt";
+        String line;
+        BufferedReader br;
+        arch=new File(route);
+        reader=new FileReader(arch);
+        br=null;
+        br=new BufferedReader(reader);
+        String[]values;
+        int max_types=17;
+        PokeType single_type;
+        String d_value;
+        double value;
+        //double[] converted_value;
+        Map<PokeType,Double> mapper=null;
+        List<Map<PokeType,Double>> listMap=null;
+        //List<PokeType>thiPokeType=pokemon.getPokeTypes();
+        for(int i=0;i<max_types;i++){
+            line=br.readLine();
+            values=line.split(" ");
+            //converted_value=new double[values.length];
+            single_type=new PokeType(values[0]);
+            for(int j=1;j<values.length;j++){//start at index 1 since the index 0 is this type 
+                d_value=values[j].substring(((values[j].length())-4), values[j].length()-1);//haya el valor a convertir en double
+                value = Double.parseDouble(d_value);
+                mapper.put(single_type,value);
+            }
+            listMap.add(mapper);//una lista con todos los los maps de multiplicadores
+            
+        }
+        reader.close();
+       return listMap;    
+    }
     public static void loadDataPokeMovements(PokeInfo pokemon) throws IOException{
         FileReader reader;
         File arch=null;
