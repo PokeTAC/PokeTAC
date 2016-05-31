@@ -45,9 +45,20 @@ public class Battle {
         nextToMove = 0;
     }
     
-    public Battle(Battle oBattle){
+    public Battle(Battle original)
+    {
+        id = idCounter++;
+        
+        trainers = new ArrayList<>();
+        for (int i = 0; i < original.trainers.size(); i++) {
+            trainers.add(new Trainer(original.trainers.get(i)));
+        }
+        
+        turnCount = original.turnCount;
+        nextToMove = original.nextToMove;
         
     }
+    
     
     
     // << ExternalMethods >>

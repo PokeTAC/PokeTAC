@@ -48,6 +48,18 @@ public class Trainer {
         this.name = name;        
     }
     
+    public Trainer(Trainer original)
+    {
+        id = counter++;
+        name = original.name;
+        pokemons = new ArrayList();
+        for (int i = 0; i < original.pokemons.size(); i++) {
+            pokemons.add(new Pokemon(original.pokemons.get(i)));
+        }
+        activePokemon = original.activePokemon;
+        nextMove = original.nextMove;
+    }
+    
     public void changePokemon(int index)
     {
         activePokemon = index;

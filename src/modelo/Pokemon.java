@@ -21,9 +21,9 @@ public class Pokemon {
     private int hitPoints;
     private int idEntrenador;
     private List<Movement> moves;
-    
     private List<Effect> activeEffects;    
-    
+
+
 
     public int getId() {
         return id;
@@ -90,12 +90,32 @@ public class Pokemon {
         
         this.moves = moves;
         
-        this.activeEffects = new ArrayList<Effect>();
+        this.activeEffects = new ArrayList();
         
         this.hitPoints = pokeInfo.getHp();
         
     }
 
+    public Pokemon(Pokemon original) {
+        
+        id = counter++;
+        name = original.name;
+        pokeInfo = original.pokeInfo;
+        hitPoints = original.hitPoints;
+        idEntrenador = original.idEntrenador;
+        moves = new ArrayList();
+        for (int i = 0; i < original.moves.size(); i++) {
+            moves.add(original.moves.get(i));
+        }
+        activeEffects = new ArrayList();
+        for (int i = 0; i < original.activeEffects.size(); i++) {
+            activeEffects.add(new Effect(original.activeEffects.get(i).getEffectInfo(), original.activeEffects.get(i).getRemainingTurns()));
+        }
+    }
+    
+    
+    
+    
     
     public List<Effect> getActiveEffects() {
         return activeEffects;
