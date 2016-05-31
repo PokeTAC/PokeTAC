@@ -7,6 +7,7 @@ package modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -77,25 +78,38 @@ public class Battle {
         //Si el siguiente movimiento es null (hizo cambio de pokemon), pasar el turno
         if (trainer.getNextMove()!=null)
         {
-            PokeInfo pokeInfo = trainer.getActivePokemon().getPokeInfo();
-            PokeInfo pokeInfoOp = trainerOp.getActivePokemon().getPokeInfo();
-              
-            //== Procesar daño
-            //Calcular daño: Damage = (Atck/Def_op)*base_power – speed_op*10  ???
-            double damage = (pokeInfo.getAtaque() / pokeInfoOp.getDefensa()) * trainer.getNextMove().getBasePower();// - pokeInfoOp.getVelocidad()*10;
-            //Multiplicador de tipo
-            //double multiplier = trainer.getNextMove().getPokeType().getMultiplier(trainerOp.getActivePokemon().getPokeInfo().getPokeTypes());
-            //damage *= multiplier;
-            //Nuevo hitpoints
-            int newHitPoints = (int)(trainer.getActivePokemon().getHitPoints() - damage);
-            trainerOp.getActivePokemon().setHitPoints(newHitPoints);
+            //Verificar si se puede mover
+            boolean canPlay = true;
+            for (Effect effect : trainer.getActivePokemon().getActiveEffects())
+                if (effect.getEffectInfo()==EffectInfo.Paralyze || effect.getEffectInfo()==EffectInfo.Sleep)
+                    {canPlay = false; break;}
             
-            //== Procesar efecto
-            if (true) //TODO: Revisar probabilidad de ser affectado
+            if (canPlay)
             {
-                EffectInfo effect = trainer.getNextMove().getPokeEffect();
-                trainerOp.getActivePokemon().activateEffect(effect);
+                PokeInfo pokeInfo = trainer.getActivePokemon().getPokeInfo();
+                PokeInfo pokeInfoOp = trainerOp.getActivePokemon().getPokeInfo();
+
+                //== Procesar daño
+                double probabilytie = (((double)pokeInfo.getVelocidad()*2/(double)pokeInfoOp.getVelocidad())*((double)trainer.getNextMove().getAccuracy())/100);
+                Random rnd = new Random();
+                //Revisar probabilidad de ser affectado
+                if (probabilytie>rnd.nextDouble())
+                {
+                    //Calcular daño: Damage = (Atck/Def_op)*base_power 
+                    double damage = ((double)pokeInfo.getAtaque() / (double)pokeInfoOp.getDefensa()) * (double)trainer.getNextMove().getBasePower();// - pokeInfoOp.getVelocidad()*10;
+                    //Multiplicador de tipo
+                    double multiplier = trainer.getNextMove().getPokeType().getMultiplier(trainerOp.getActivePokemon().getPokeInfo().getPokeTypes());
+                    damage *= multiplier;
+                    //Nuevo hitpoints
+                    int newHitPoints = (int)(trainer.getActivePokemon().getHitPoints() - damage);
+                    trainerOp.getActivePokemon().setHitPoints(newHitPoints);
+
+                    //== Procesar efecto
+                    EffectInfo effect = trainer.getNextMove().getPokeEffect();
+                    trainerOp.getActivePokemon().activateEffect(effect);
+                }                
             }
+
             
             //Consumir movimiento
             trainer.setNextMove(null);
@@ -151,18 +165,18 @@ public class Battle {
     private static void ProccessEffects(Trainer trainer) {
         
         List<Effect> effects = trainer.getActivePokemon().getActiveEffects();
-        for(Effect effect : effects)
-        {
-            //En caso de veneno
-            if (effect.getEffectInfo()==EffectInfo.Poison){
-                trainer.getActivePokemon().setHitPoints(trainer.getActivePokemon().getHitPoints()-effect.getEffectInfo().POISON_DAMAGE);
+        for (int i = 0; i < 10; i++) {
+                        //En caso de veneno
+            if (effects.get(i).getEffectInfo()==EffectInfo.Poison){
+                trainer.getActivePokemon().setHitPoints(trainer.getActivePokemon().getHitPoints()-effects.get(i).getEffectInfo().POISON_DAMAGE);
             }
             
             //Reducir turnos de efectos
-            effect.decreaseRemainingTurns();
-            if (effect.getRemainingTurns()==0)
+            effects.get(i).decreaseRemainingTurns();
+            if (effects.get(i).getRemainingTurns()==0)
             {
-                effects.remove(effect); //No se si esto funciona bien
+                effects.remove(i);
+                i--;
             }
         }
     }
