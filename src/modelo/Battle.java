@@ -7,6 +7,7 @@ package modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -80,19 +81,24 @@ public class Battle {
             PokeInfo pokeInfo = trainer.getActivePokemon().getPokeInfo();
             PokeInfo pokeInfoOp = trainerOp.getActivePokemon().getPokeInfo();
               
-            //== Procesar daño
-            //Calcular daño: Damage = (Atck/Def_op)*base_power – speed_op*10  ???
-            double damage = (pokeInfo.getAtaque() / pokeInfoOp.getDefensa()) * trainer.getNextMove().getBasePower();// - pokeInfoOp.getVelocidad()*10;
-            //Multiplicador de tipo
-            //double multiplier = trainer.getNextMove().getPokeType().getMultiplier(trainerOp.getActivePokemon().getPokeInfo().getPokeTypes());
-            //damage *= multiplier;
-            //Nuevo hitpoints
-            int newHitPoints = (int)(trainer.getActivePokemon().getHitPoints() - damage);
-            trainerOp.getActivePokemon().setHitPoints(newHitPoints);
             
-            //== Procesar efecto
-            if (true) //TODO: Revisar probabilidad de ser affectado
+            
+            //== Procesar daño
+            double probabilytie = (((double)pokeInfo.getVelocidad()*2/(double)pokeInfoOp.getVelocidad())*((double)trainer.getNextMove().getAccuracy())/100);
+            Random rnd = new Random();
+            
+            if (probabilytie>rnd.nextDouble()) //TODO: Revisar probabilidad de ser affectado
             {
+                //Calcular daño: Damage = (Atck/Def_op)*base_power 
+                double damage = ((double)pokeInfo.getAtaque() / (double)pokeInfoOp.getDefensa()) * (double)trainer.getNextMove().getBasePower();// - pokeInfoOp.getVelocidad()*10;
+                //Multiplicador de tipo
+                double multiplier = trainer.getNextMove().getPokeType().getMultiplier(trainerOp.getActivePokemon().getPokeInfo().getPokeTypes());
+                damage *= multiplier;
+                //Nuevo hitpoints
+                int newHitPoints = (int)(trainer.getActivePokemon().getHitPoints() - damage);
+                trainerOp.getActivePokemon().setHitPoints(newHitPoints);
+
+                //== Procesar efecto
                 EffectInfo effect = trainer.getNextMove().getPokeEffect();
                 trainerOp.getActivePokemon().activateEffect(effect);
             }
