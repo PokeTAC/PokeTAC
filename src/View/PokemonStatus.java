@@ -6,6 +6,8 @@
 package View;
 
 import java.awt.Graphics;
+import modelo.Effect;
+import modelo.EffectInfo;
 import modelo.Pokemon;
 
 /**
@@ -41,7 +43,30 @@ public class PokemonStatus extends javax.swing.JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        if(p!=null)pbarHealth.setValue(p.getHitPoints());
+        if(p!=null)
+        {
+            pbarHealth.setValue(p.getHitPoints());
+            
+            String status = "";
+            for(Effect effect : p.getActiveEffects())
+            {
+                if (effect.getEffectInfo()==EffectInfo.Poison)
+                {
+                    status += "ENV ";
+                }
+                else if (effect.getEffectInfo()==EffectInfo.Paralyze)
+                {
+                    status += "PAR ";
+                }
+                else if (effect.getEffectInfo()==EffectInfo.Sleep)
+                {
+                    status += "DOR ";
+                }       
+                
+            }
+            lblStatus.setText(status);
+        }
+        
         super.paintComponent(g);
     }
     
@@ -64,6 +89,7 @@ public class PokemonStatus extends javax.swing.JPanel {
             }
         };
         jPanel1 = new javax.swing.JPanel();
+        lblStatus = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createCompoundBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1)), new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true)));
         setPreferredSize(new java.awt.Dimension(200, 100));
@@ -95,11 +121,16 @@ public class PokemonStatus extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(70, Short.MAX_VALUE)
+                .addComponent(lblStatus)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 43, Short.MAX_VALUE)
+                .addComponent(lblStatus))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -113,6 +144,7 @@ public class PokemonStatus extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblName;
+    private javax.swing.JLabel lblStatus;
     private javax.swing.JProgressBar pbarHealth;
     // End of variables declaration//GEN-END:variables
 }

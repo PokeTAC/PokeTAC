@@ -41,6 +41,10 @@ public class Trainer {
         return nextMove;
     }
 
+    public String getName()
+    {
+        return name;
+    }
     
     //private int idBatalla;
     

@@ -94,7 +94,7 @@ public class Battle {
             if (canPlay)
             {
                 //== Procesar daño
-                double probabilytie = (((double)pokeInfo.getVelocidad()*2/(double)pokeInfoOp.getVelocidad())*((double)trainer.getNextMove().getAccuracy())/100);
+                double probabilytie = (((double)pokeInfo.getVelocidad()*1.5/(double)pokeInfoOp.getVelocidad())*((double)trainer.getNextMove().getAccuracy())/100);
                 Random rnd = new Random();
                 //Revisar probabilidad de ser affectado
                 if (probabilytie>rnd.nextDouble())
@@ -104,10 +104,12 @@ public class Battle {
                     //Multiplicador de tipo
                     double multiplier = trainer.getNextMove().getPokeType().getMultiplier(trainerOp.getActivePokemon().getPokeInfo().getPokeTypes());
                     damage *= multiplier;
+                    //Para que no baje tan rapido
+                    damage /= 5;
                     //Nuevo hitpoints
-                    int newHitPoints = (int)(trainerOp.getActivePokemon().getHitPoints() - damage);
+                    int newHitPoints = (int)(trainerOp.getActivePokemon().getHitPoints() - (int)damage);
                     trainerOp.getActivePokemon().setHitPoints(newHitPoints);
-                    log.add(pokeInfoOp.getNombre() + " recibió " + damage + " puntos de daño.");
+                    log.add(pokeInfoOp.getNombre() + " recibió " + (int)damage + " puntos de daño.");
 
                     //== Procesar efecto
                     EffectInfo effect = trainer.getNextMove().getPokeEffect();

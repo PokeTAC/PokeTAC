@@ -53,7 +53,8 @@ public class BattleScreen extends javax.swing.JPanel{
         
         repaint();
         if(logicMan.getBattle().isBattlerOver()){
-            int i = JOptionPane.showConfirmDialog(pnlActions, "Juego terminado. ¿Desea jugar otra vez?", "Juego terminado", JOptionPane.YES_NO_OPTION);
+            String winnerName; if (logicMan.isUserTurn()) winnerName=logicMan.getBattle().getEntrenadores().get(0).getName(); else winnerName=logicMan.getBattle().getEntrenadores().get(1).getName();
+            int i = JOptionPane.showConfirmDialog(pnlActions,"Ganador: " + winnerName + "\nJuego terminado. ¿Desea jugar otra vez?", "Juego terminado", JOptionPane.YES_NO_OPTION);
             if(i==0){
                 mw.restart();
             }else{
