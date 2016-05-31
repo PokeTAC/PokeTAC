@@ -1,0 +1,24 @@
+Pound
+Normal
+40 100
+Mega Punch
+Normal
+80 85
+Psychic
+Psychic
+90 100
+Ancient Power
+Rock
+60 100
+Aura Sphere
+Fight
+80 999
+Giga Impact
+Normal
+150 90
+Acrobatics
+Flying
+55 100
+Aerial Ace
+Flying
+60 999

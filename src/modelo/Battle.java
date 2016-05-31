@@ -94,7 +94,7 @@ public class Battle {
                     
                     if (pokeTeamOp.get(i).getHitPoints()>0)
                     {
-                        trainerOp.changePokemon(pokeTeamOp.get(i));
+                        trainerOp.changePokemon(i);
                         break;
                     }
                 } 
@@ -138,6 +138,10 @@ public class Battle {
                 effects.remove(effect); //No se si esto funciona bien
             }
         }
+    }
+    
+    public boolean isUserTurn(){
+        return nextToMove == 0;
     }
     
     

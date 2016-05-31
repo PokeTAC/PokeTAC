@@ -47,8 +47,10 @@ public class Movement {
         this.pokeEffect = pokeEffect;
     }
 
-
-    
+    @Override
+    public String toString() {
+        return name + " Poder: " + base_power;
+    } 
 }
 
 

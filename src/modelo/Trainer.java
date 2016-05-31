@@ -19,7 +19,7 @@ public class Trainer {
     private int id;
     private String name;
     private List<Pokemon> pokemons;
-    private Pokemon activePokemon;
+    private int activePokemon;
     private Movement nextMove;
     
     public List<Pokemon> getTeam(){
@@ -29,7 +29,7 @@ public class Trainer {
         pokemons = pokemonTeam;
     }
     public Pokemon getActivePokemon() {
-        return activePokemon;
+        return pokemons.get(activePokemon);
     }
     public Movement getNextMove() {
         return nextMove;
@@ -44,13 +44,13 @@ public class Trainer {
     public Trainer(String name)
     {
         id = counter++;
-        
+        activePokemon = 0;
         this.name = name;        
     }
     
-    public void changePokemon(Pokemon pokemon)
+    public void changePokemon(int index)
     {
-        activePokemon = pokemon;
+        activePokemon = index;
         /*
         if (pokemons.contains(pokemon))
         {

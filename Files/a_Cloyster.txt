@@ -1,0 +1,24 @@
+Hydro Pump
+Water
+110 80
+Aurora Beam
+Ice
+65 100
+Spike Cannon
+Normal
+80 100
+Icicle Crash
+Ice
+85 90
+Icicle Spear
+Ice
+100 100
+Razor Shell
+Water
+75 95
+Brine
+Water
+65 100
+Ice Beam
+Ice
+90 100

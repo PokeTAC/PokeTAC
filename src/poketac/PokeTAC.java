@@ -5,6 +5,7 @@
  */
 package poketac;
 
+import View.MainWindow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,59 +23,63 @@ import java.io.*;
  * @author DiegoAndres
  */
 public class PokeTAC {
+    private static final String FILE_DIR = "Files/";
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         
-        System.out.println("Bienvenido a PokeTAC! =D");
+        MainWindow mw = new MainWindow();
+        mw.setVisible(true);
         
-        PokeTAC pokeTAC = new PokeTAC();
-        
-        //GUI: Pantalla de bienvenida
-        
-        pokeTAC.initGame("Perejil");
-             
-        //GUI: Iniciar Batalla
-        do 
-        {
-            pokeTAC.selectAITeam();
-            
-            //GUI: Seleccionar Team de usuario para la batalla
-            pokeTAC.askUserTeam();
-
-            pokeTAC.initBattle();
-            
-            //GUI: Verificar turno de batalla o si ha terminado
-            while (!pokeTAC.activeBattle.isBattlerOver())
-            {
-                
-                Trainer nextTrainer = pokeTAC.activeBattle.nextTrainer();
-
-                if (nextTrainer==pokeTAC.aiTrainer)
-                {
-                    pokeTAC.selectAIMove();
-                }
-                else
-                {
-                    //GUI: Seleccionar movimiento usuario
-                    pokeTAC.askUserMove();
-                }
-
-                pokeTAC.activeBattle.proccessTurnLogic();
-            }
-
-            //GUI: Mostrar pantalla resultado
-            
-            pokeTAC.endBattle();
-            
-            
-        } while (askIfBattleAgain());
-            
-        //GUI: Mostar pantalla despedida
-        
-        pokeTAC.endGame();
+//        System.out.println("Bienvenido a PokeTAC! =D");
+//        
+//        PokeTAC pokeTAC = new PokeTAC();
+//        
+//        //GUI: Pantalla de bienvenida
+//        
+//        pokeTAC.initGame("Perejil");
+//             
+//        //GUI: Iniciar Batalla
+//        do 
+//        {
+//            pokeTAC.selectAITeam();
+//            
+//            //GUI: Seleccionar Team de usuario para la batalla
+//            pokeTAC.askUserTeam();
+//
+//            pokeTAC.initBattle();
+//            
+//            //GUI: Verificar turno de batalla o si ha terminado
+//            while (!pokeTAC.activeBattle.isBattlerOver())
+//            {
+//                
+//                Trainer nextTrainer = pokeTAC.activeBattle.nextTrainer();
+//
+//                if (nextTrainer==pokeTAC.aiTrainer)
+//                {
+//                    pokeTAC.selectAIMove();
+//                }
+//                else
+//                {
+//                    //GUI: Seleccionar movimiento usuario
+//                    pokeTAC.askUserMove();
+//                }
+//
+//                pokeTAC.activeBattle.proccessTurnLogic();
+//            }
+//
+//            //GUI: Mostrar pantalla resultado
+//            
+//            pokeTAC.endBattle();
+//            
+//            
+//        } while (askIfBattleAgain());
+//            
+//        //GUI: Mostar pantalla despedida
+//        
+//        pokeTAC.endGame();
         
     }
     
@@ -89,8 +94,8 @@ public class PokeTAC {
     
     // << Constants >>
     
-    final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
-    final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
+    public static final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
+    public static final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
     
     // << InternalFields >>
     List<PokeInfo> pokemonDB;
@@ -103,7 +108,7 @@ public class PokeTAC {
     
     // << InternalMethods >>
     
-    private void initGame(String username)
+    public void initGame(String username)
     {
         //Cargar datos de archivo
         try {
@@ -131,7 +136,7 @@ public class PokeTAC {
         File arch=null;
         String line1,line2,line3;
         BufferedReader br;
-        arch=new File("./Files/pokedex.txt");
+        arch=new File(FILE_DIR + "pokedex.txt");
         reader=new FileReader(arch);
         br=null;
         br=new BufferedReader(reader);
@@ -174,7 +179,7 @@ public class PokeTAC {
     }
     
     //Aqui se selecciona los pokemons para la IA
-    private void selectAITeam()
+    public void selectAITeam()
     {
         List<Pokemon> ipokemons = new ArrayList<>();
         
@@ -211,17 +216,17 @@ public class PokeTAC {
         activeBattle = new Battle(userTrainer,aiTrainer);
     }
  
-    private void selectAIMove()
+    public void selectAIMove()
     {
         if (rnd.nextBoolean())
         {
             //CambiarPokemon
-            aiTrainer.changePokemon(aiTrainer.getTeam().get(rnd.nextInt(MAX_POKEMON)));
+            aiTrainer.changePokemon(rnd.nextInt(MAX_POKEMON));
         }
         else
         {
             //Escojer ataque
-            aiTrainer.setNextMove(aiTrainer.getActivePokemon().getMovimientos().get(MAX_MOVES));
+            aiTrainer.setNextMove(aiTrainer.getActivePokemon().getMovimientos().get(MAX_MOVES-1));
         }     
     }
     
@@ -240,7 +245,7 @@ public class PokeTAC {
         if (rnd.nextBoolean())
         {
             //CambiarPokemon
-            userTrainer.changePokemon(userTrainer.getTeam().get(rnd.nextInt(MAX_POKEMON)));
+            userTrainer.changePokemon(rnd.nextInt(MAX_POKEMON));
         }
         else
         {
@@ -281,10 +286,11 @@ public class PokeTAC {
         userTrainer.setTeam(ipokemons);
                 
     }
-    private void loadDataPokeMovements(PokeInfo pokemon) throws IOException{
+    
+    public static void loadDataPokeMovements(PokeInfo pokemon) throws IOException{
         FileReader reader;
         File arch=null;
-        String route="./Files/";
+        String route=FILE_DIR;
         String fname="a_"+pokemon.getNombre();
         route=route+fname+".txt";
         String line1,line2,line3;
@@ -341,6 +347,24 @@ public class PokeTAC {
         }
         reader.close();
         pokemon.setMoves(movements);
+    }
+    
+    public void initBattle(List<Pokemon> pokemons){
+        selectAITeam();
+        userTrainer.setTeam(pokemons);
+        initBattle();
+    }
+    
+    public Battle getBattle(){
+        return activeBattle;
+    }
+    
+    public List<PokeInfo> getAllPokemons(){
+        return pokemonDB;
+    }
+    
+    public boolean isUserTurn(){
+        return activeBattle.isUserTurn();
     }
     
     

@@ -1,0 +1,24 @@
+Zap Cannon
+Electric
+120 50
+Dragon Pulse
+Dragon
+85 100
+Fire Punch
+Fire
+75 100
+Tackle
+Normal
+50 100
+Take Down
+Normal
+90 85
+Thunder Punch
+Electric
+75 100 P
+Signal Beam
+Bug
+75 100
+Thunder
+Electric
+110 70

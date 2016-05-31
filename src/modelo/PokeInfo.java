@@ -88,4 +88,9 @@ public class PokeInfo {
     public void setMoves(List<Movement> moves){
         this.moves=moves;
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

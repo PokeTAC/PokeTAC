@@ -1,0 +1,24 @@
+Play Rough
+Fairy
+90 90
+Scratch
+Normal
+40 100
+Bite
+Dark
+60 100
+Fury Swipes
+Normal
+72 80
+Swift
+Normal
+60 999
+Slash
+Normal
+70 100
+Assurance
+Dark
+60 100
+Night Slash
+Dark
+70 100

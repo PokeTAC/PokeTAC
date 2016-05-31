@@ -92,6 +92,8 @@ public class Pokemon {
         
         this.activeEffects = new ArrayList<Effect>();
         
+        this.hitPoints = pokeInfo.getHp();
+        
     }
 
     

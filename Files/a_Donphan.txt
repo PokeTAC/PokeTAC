@@ -1,0 +1,24 @@
+Fire Fang
+Fire
+65 95
+Thunder Fang
+Electric
+65 95
+Horn Attack
+Normal
+65 100
+Bulldoze
+Ground
+60 100
+Rapid Spin
+Normal
+20 100
+Assurance
+Dark
+60 100
+Slam
+Normal
+80 75
+Earthquake
+Ground
+100 100
