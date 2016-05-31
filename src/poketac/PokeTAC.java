@@ -13,6 +13,9 @@ import modelo.Trainer;
 import modelo.Pokemon;
 import modelo.Movement;
 import modelo.PokeInfo;
+import modelo.PokeType;
+import modelo.EffectInfo;
+import java.io.*;
 
 /**
  *
@@ -103,8 +106,14 @@ public class PokeTAC {
     private void initGame(String username)
     {
         //Cargar datos de archivo
-        loadData();
-        
+        try {
+            loadDataPokeInfo();
+        }
+        catch(IOException e){
+            System.out.println("error:PokeInfo loader");
+            e.printStackTrace();
+            
+        }
         //Crear todo lo necesario para el AI
         //createAI();
         
@@ -114,12 +123,54 @@ public class PokeTAC {
         rnd = new Random();
        
     }
-    
-    private void loadData()
+    private void loadDataPokeInfo()throws IOException
     {
-        pokemonDB = new ArrayList<>();
-        
-        //................ Cargar data
+        //................ Cargar data pokeInfo
+        pokemonDB = new ArrayList<PokeInfo>();
+        FileReader reader;
+        File arch=null;
+        String line1,line2,line3;
+        BufferedReader br;
+        arch=new File("./Files/pokedex.txt");
+        reader=new FileReader(arch);
+        br=null;
+        br=new BufferedReader(reader);
+        PokeInfo newPoke;
+        ArrayList<PokeType> types;
+        PokeType single_type;
+        int numPokemon=20;
+        String[]values;
+        int[] converted_value;
+        String[]arr_types;
+        for(int i=0;i<numPokemon;i++){
+            line1=br.readLine();
+            line2=br.readLine();
+            line3=br.readLine();
+            newPoke= new PokeInfo();
+            types=new ArrayList<PokeType>();
+            newPoke.setNombre(line1);
+            arr_types=line2.split("/");
+            
+            for(int j=0;j<arr_types.length;j++){
+                single_type=new PokeType();
+                single_type.setNombre(arr_types[j]);
+                types.add(single_type);
+            }
+            newPoke.setTipos(types);
+            
+            values=line3.split(" ");
+            converted_value=new int[values.length];
+            for(int k=0;k<values.length;k++){
+                converted_value[k] = Integer.parseInt(values[k]);
+            }
+            newPoke.setHp(converted_value[0]);
+            newPoke.setAtaque(converted_value[1]);
+            newPoke.setDefensa(converted_value[2]);
+            newPoke.setVelocidad(converted_value[5]);
+            pokemonDB.add(newPoke);
+        }
+        reader.close();
+        //................ fin Cargar data pokeInfo
     }
     
     //Aqui se selecciona los pokemons para la IA
@@ -130,9 +181,16 @@ public class PokeTAC {
         for (int i = 0; i < MAX_POKEMON; i++) {
             
             PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
+           
+            try {
+                loadDataPokeMovements(pokemon);
+            }
+            catch(IOException e){
+                System.out.println("error:PokeMovements loader");
+                e.printStackTrace();
+            }
             
             List<Movement> moves = new ArrayList<>();
-            
             for (int j = 0; j < MAX_MOVES; j++) {
                 
                 List<Movement> pokeMoves = pokemon.getMoves();
@@ -201,7 +259,13 @@ public class PokeTAC {
             PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
             
             List<Movement> moves = new ArrayList<>();
-            
+            try {
+                loadDataPokeMovements(pokemon);
+            }
+            catch(IOException e){
+                System.out.println("error:PokeMovements loader");
+                e.printStackTrace();
+            }
             for (int j = 0; j < MAX_MOVES; j++) {
                 
                 List<Movement> pokeMoves = pokemon.getMoves();
@@ -217,7 +281,67 @@ public class PokeTAC {
         userTrainer.setTeam(ipokemons);
                 
     }
-    
+    private void loadDataPokeMovements(PokeInfo pokemon) throws IOException{
+        FileReader reader;
+        File arch=null;
+        String route="./Files/";
+        String fname="a_"+pokemon.getNombre();
+        route=route+fname+".txt";
+        String line1,line2,line3;
+        BufferedReader br;
+        arch=new File(route);
+        reader=new FileReader(arch);
+        br=null;
+        br=new BufferedReader(reader);
+        int max_pokeMoves=8;
+        Movement newMove;
+        ArrayList<Movement> movements=new ArrayList<>();
+        PokeType single_type;
+        String[]values;
+        int[] converted_value;
+        int baseD,acc;
+        EffectInfo effect = null;
+        for(int i=0;i<max_pokeMoves;i++){
+            line1=br.readLine();//name
+            line2=br.readLine();//type
+            line3=br.readLine();//values
+            single_type=new PokeType();
+            single_type.setNombre(line2);
+            values=line3.split(" ");
+            converted_value=new int[values.length];
+            if(values.length==3){//this means it have an effect
+                for(int j=0;j<(values.length-1);j++){
+                    converted_value[j]=Integer.parseInt(values[j]);
+                }
+
+                switch(values[values.length-1]){//last one on this line is the effect type
+                    case "P":
+                        effect= EffectInfo.Paralyze;
+                        break;
+                    case "D":
+                        effect=EffectInfo.Sleep;
+                        break;
+                    case "E":
+                        effect=EffectInfo.Poison;
+                        break;
+                }
+                
+            }
+            else{//doesn't have an effect
+                for(int j=0;j<(values.length);j++){
+                    converted_value[j]=Integer.parseInt(values[j]);
+                }
+                effect=EffectInfo.None;
+                
+            }
+            baseD=converted_value[0];
+            acc=converted_value[1];
+            newMove=new Movement(line1,baseD,acc,single_type,effect);
+            movements.add(newMove);
+        }
+        reader.close();
+        pokemon.setMoves(movements);
+    }
     
     
 }
