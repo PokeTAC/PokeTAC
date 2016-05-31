@@ -276,7 +276,7 @@ public class PokeTAC {
         else
         {
             //Escojer ataque
-            aiTrainer.setNextMove(aiTrainer.getActivePokemon().getMovimientos().get(MAX_MOVES-1));
+            aiTrainer.setNextMove(aiTrainer.getActivePokemon().getMovimientos().get(rnd.nextInt(MAX_MOVES)));
         }     
     }
     
