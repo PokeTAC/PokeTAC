@@ -34,13 +34,13 @@ public class MovementSelect extends javax.swing.JDialog {
     
     private void displayCurrentPokemon(){
         PokeInfo p = pokeinfos.get(index);
-        try {
-            PokeTAC.loadDataPokeMovements(p);
-        }
-        catch(IOException e){
-            System.out.println("ERROR: PokeMovements loader");
-            e.printStackTrace();
-        }
+        //try {
+        //    PokeTAC.loadDataPokeMovements(p);
+        //}
+        //catch(IOException e){
+        //    System.out.println("ERROR: PokeMovements loader");
+        //    e.printStackTrace();
+        //}
         List<Movement> movs = p.getMoves();
         DefaultListModel<Movement> model = new DefaultListModel<>();
         movs.stream().forEach((m) -> {model.addElement(m);});

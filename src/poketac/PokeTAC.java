@@ -19,7 +19,9 @@ import modelo.PokeInfo;
 import modelo.PokeType;
 import modelo.EffectInfo;
 import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
+import javafx.beans.property.SimpleMapProperty;
 
 /**
  *
@@ -110,12 +112,33 @@ public class PokeTAC {
     Trainer aiTrainer;
     
     Random rnd;
+    List<PokeType> listTypes;
     
     // << InternalMethods >>
     
+    public PokeType FindPokeTypeByName(String name)
+    {
+        PokeType match = null;
+        for(PokeType pt2 : listTypes)
+        if (pt2.getName().equalsIgnoreCase(name)) {   match = pt2;   break; }
+        return match;
+    }
+    
     public void initGame(String username)
     {
-        //Cargar datos de archivo
+
+        //load the list of maps of every type and its multipliers
+        listTypes = null;
+        try {
+            listTypes=loadDataPokemonMultipliers();
+        }
+        catch(IOException e){
+            System.out.println("error:PokeMultiplier loader");
+            e.printStackTrace();
+            
+        }
+        
+                //Cargar datos de archivo
         try {
             loadDataPokeInfo();
         }
@@ -124,17 +147,8 @@ public class PokeTAC {
             e.printStackTrace();
             
         }
-        //load the list of maps of every type and its multipliers
-        List<Map<PokeType,Double>> listMaps=null;
-        try {
-            listMaps=loadDataPokemonMultipliers();
-        }
-        catch(IOException e){
-            System.out.println("error:PokeMultiplier loader");
-            e.printStackTrace();
-            
-        }
-        List<PokeType>types;
+        
+        
         //for each pokemon on pokemonDB we set its movements and multipliers
         for(int i=0;i<pokemonDB.size();i++){
             
@@ -145,17 +159,14 @@ public class PokeTAC {
                     System.out.println("error:PokeMovements loader");
                     e.printStackTrace();
                 }
-            //assign each type its multiplier
-            types=pokemonDB.get(i).getPokeTypes();
-            for(int j=0;j<types.size();j++){
-                for(int h=0;h<17;h++){
-                    if(((listMaps.get(h)).get(types.get(j)))!=null){//it found the type on the listMap
-                        types.get(j).SetMultiplicators(listMaps.get(h));
-                        break;
-                    }
-                }
-                
+            //Intercambiar tipos por los cargados en loadDataPokemonMultipliers
+            List<PokeType> types=pokemonDB.get(i).getPokeTypes();
+            List<PokeType> newTypes = new ArrayList();
+            for(PokeType pt : types)
+            {
+                newTypes.add(FindPokeTypeByName(pt.getName()));
             }
+            pokemonDB.get(i).setTipos(newTypes);
             
         }
         //Crear todo lo necesario para el AI
@@ -197,7 +208,7 @@ public class PokeTAC {
             arr_types=line2.split("/");
             
             for(int j=0;j<arr_types.length;j++){
-                single_type = new PokeType(arr_types[j]);
+                single_type = FindPokeTypeByName(arr_types[j]);
                 types.add(single_type);
             }
             newPoke.setTipos(types);
@@ -335,43 +346,71 @@ public class PokeTAC {
         userTrainer.setTeam(ipokemons);
                 
     }
-    private List<Map<PokeType,Double>> loadDataPokemonMultipliers() throws IOException{
+    private List<PokeType> loadDataPokemonMultipliers() throws IOException{
         FileReader reader;
         File arch=null;
         String route=FILE_DIR;
         String fname="types.txt";
         String line;
         BufferedReader br;
-        arch=new File(route);
+        arch=new File(route + fname);
         reader=new FileReader(arch);
         br=null;
         br=new BufferedReader(reader);
         String[]values;
         int max_types=17;
-        PokeType single_type;
         String d_value;
         double value;
+        List<PokeType> pokeTypes = new ArrayList();
+        for(int i=0;i<max_types;i++){
+            line=br.readLine();
+            values=line.split(" ");     
+            pokeTypes.add(new PokeType(values[0]));
+        }
+        reader.close();
+        
+
+        arch=new File(route + fname);
+        reader=new FileReader(arch);
+        br=null;
+        br=new BufferedReader(reader);
         //double[] converted_value;
-        Map<PokeType,Double> mapper=null;
-        List<Map<PokeType,Double>> listMap=null;
+        List<Map<PokeType,Double>> listMap= new ArrayList();
         //List<PokeType>thiPokeType=pokemon.getPokeTypes();
         for(int i=0;i<max_types;i++){
             line=br.readLine();
             values=line.split(" ");
             //converted_value=new double[values.length];
-            single_type=new PokeType(values[0]);
+            Map<PokeType,Double> mapper = new HashMap();            
             for(int j=1;j<values.length;j++){//start at index 1 since the index 0 is this type 
                 d_value=values[j].substring(((values[j].length())-4), values[j].length()-1);//haya el valor a convertir en double
+                String key = values[j].substring(0, values[j].length()-5);//haya el valor a convertir en double
                 value = Double.parseDouble(d_value);
-                mapper.put(single_type,value);
+                
+                PokeType match = null;
+                for(PokeType pt : pokeTypes)
+                {
+                    if (pt.getName().equalsIgnoreCase(key))
+                    {
+                        match = pt;
+                        break;
+                    }
+                }
+                                
+                mapper.put(match,value);
             }
             listMap.add(mapper);//una lista con todos los los maps de multiplicadores
             
         }
-        reader.close();
-       return listMap;    
+        reader.close();        
+        
+        for (int i = 0; i < pokeTypes.size(); i++) {
+            pokeTypes.get(i).SetMultiplicators(listMap.get(i));
+        }
+        
+        return pokeTypes;    
     }
-    public static void loadDataPokeMovements(PokeInfo pokemon) throws IOException{
+    public void loadDataPokeMovements(PokeInfo pokemon) throws IOException{
         FileReader reader;
         File arch=null;
         String route=FILE_DIR;
@@ -395,7 +434,7 @@ public class PokeTAC {
             line1=br.readLine();//name
             line2=br.readLine();//type
             line3=br.readLine();//values
-            single_type=new PokeType(line2);
+            single_type= FindPokeTypeByName(line2);
             values=line3.split(" ");
             converted_value=new int[values.length];
             if(values.length==3){//this means it have an effect
