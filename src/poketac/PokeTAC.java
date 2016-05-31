@@ -152,13 +152,12 @@ public class PokeTAC {
             line2=br.readLine();
             line3=br.readLine();
             newPoke= new PokeInfo();
-            types=new ArrayList<PokeType>();
+            types=new ArrayList<>();
             newPoke.setNombre(line1);
             arr_types=line2.split("/");
             
             for(int j=0;j<arr_types.length;j++){
-                single_type=new PokeType();
-                single_type.setNombre(arr_types[j]);
+                single_type = new PokeType(arr_types[j]);
                 types.add(single_type);
             }
             newPoke.setTipos(types);
@@ -311,8 +310,7 @@ public class PokeTAC {
             line1=br.readLine();//name
             line2=br.readLine();//type
             line3=br.readLine();//values
-            single_type=new PokeType();
-            single_type.setNombre(line2);
+            single_type=new PokeType(line2);
             values=line3.split(" ");
             converted_value=new int[values.length];
             if(values.length==3){//this means it have an effect
