@@ -10,6 +10,7 @@ import java.util.List;
 import modelo.Battle;
 import modelo.Movement;
 import modelo.Pokemon;
+import modelo.Trainer;
 
 /**
  *
@@ -26,21 +27,37 @@ public class PokeState extends MinMaxState{
     public Movement getChosenMove(){
         return this.chosenMove;
     }
+    
+    public Battle getBattle(){
+        return this.battle;
+    }
 
     @Override
     public List<MinMaxState> findChildren() {
+        Trainer t = battle.nextTrainer();
+        
         List<MinMaxState> result = new ArrayList<>();
-        Pokemon activePoke = battle.getEntrenadores().get(1).getActivePokemon();
+        Pokemon activePoke = t.getActivePokemon();
+        
         for(Movement m : activePoke.getMovimientos()){
             Battle cpyBattle = new Battle(battle);
-            cpyBattle.getEntrenadores().get(1).setNextMove(m);
+            cpyBattle.nextTrainer().setNextMove(m);
             cpyBattle.proccessTurnLogic();
             PokeState child = new PokeState(cpyBattle);
             child.chosenMove = m;
             result.add(child);
         }
         
-        for(Pokemon p : battle.getEntrenadores().get(1).getTeam()){
+        for(int i = 0; i< t.getTeam().size(); i++){
+            Pokemon p = t.getTeam().get(i);
+            if(p.getHitPoints()>0 && p.getId() != activePoke.getId()){
+                Battle cpyBattle = new Battle(battle);
+                cpyBattle.nextTrainer().changePokemon(i);
+                cpyBattle.proccessTurnLogic();
+                PokeState child = new PokeState(cpyBattle);
+                child.chosenMove = null;
+                result.add(child);
+            }
         }
         
         return result;

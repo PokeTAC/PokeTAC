@@ -28,9 +28,15 @@ public class Trainer {
     public void setTeam(List<Pokemon> pokemonTeam) {
         pokemons = pokemonTeam;
     }
+    
     public Pokemon getActivePokemon() {
         return pokemons.get(activePokemon);
     }
+    
+    public int getActivePokemonIndex() {
+        return activePokemon;
+    }
+    
     public Movement getNextMove() {
         return nextMove;
     }

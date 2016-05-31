@@ -236,7 +236,12 @@ public class PokeTAC {
     
     public void selectAIMinMaxMove(){
         PokeState state  = (PokeState)mmAlgo.getNextMove(new PokeState(new Battle(activeBattle)), true);
-        aiTrainer.setNextMove(state.getChosenMove());
+        if(state.getChosenMove()!= null){
+            aiTrainer.setNextMove(state.getChosenMove());
+        }else{
+            aiTrainer.changePokemon(state.getBattle().getEntrenadores().get(1).getActivePokemonIndex());
+        }
+        
     }
     
     private void endBattle()
