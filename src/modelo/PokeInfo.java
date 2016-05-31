@@ -71,7 +71,7 @@ public class PokeInfo {
         this.velocidad = velocidad;
     }
 
-    public List<PokeType> getTipos() {
+    public List<PokeType> getPokeTypes() {
         return tipos;
     }
 

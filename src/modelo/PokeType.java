@@ -19,16 +19,36 @@ public class PokeType {
     public int getId() {
         return id;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
+    public String getName() {
         return name;
     }
-
-    public void setNombre(String nombre) {
-        this.name = nombre;
+    double getMultiplier(List<PokeType> pokeTypes) {
+      
+        double multiplier = 1;
+        
+        for (Map.Entry<PokeType, Double> entry : multiplicators.entrySet())
+        {
+            for (PokeType pokeType : pokeTypes)
+            {
+                if (entry.getKey()==pokeType)
+                {
+                    multiplier *= entry.getValue();
+                }
+            }
+        }
+        
+        return multiplier;
     }
+
+    public PokeType(String name)
+    {
+        this.name = name;
+    }
+
+    public void SetMultiplicators(Map<PokeType,Double> multiplicators)
+    {
+        this.multiplicators = multiplicators;
+    }
+    
 }
+
