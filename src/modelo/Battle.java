@@ -17,7 +17,7 @@ public class Battle {
     
     static int idCounter = 0;
     
-    private int id;
+    private final int id;
     private List<Trainer> trainers;
     private int turnCount; //Cuenta los turnos en total
     private int nextToMove; //Indica a que entrenador le toca siguiente
@@ -51,8 +51,8 @@ public class Battle {
         id = idCounter++;
         
         trainers = new ArrayList<>();
-        for (int i = 0; i < original.trainers.size(); i++) {
-            trainers.add(new Trainer(original.trainers.get(i)));
+        for (Trainer trainer : original.trainers) {
+            trainers.add(new Trainer(trainer));
         }
         
         turnCount = original.turnCount;
@@ -94,10 +94,10 @@ public class Battle {
             if (canPlay)
             {
                 //== Procesar daño
-                double probabilytie = (((double)pokeInfo.getVelocidad()*1.5/(double)pokeInfoOp.getVelocidad())*((double)trainer.getNextMove().getAccuracy())/100);
+                double prob = (((double)pokeInfo.getVelocidad()*1.5/(double)pokeInfoOp.getVelocidad())*((double)trainer.getNextMove().getAccuracy())/100);
                 Random rnd = new Random();
                 //Revisar probabilidad de ser affectado
-                if (probabilytie>rnd.nextDouble())
+                if (prob>rnd.nextDouble())
                 {
                     //Calcular daño: Damage = (Atck/Def_op)*base_power 
                     double damage = ((double)pokeInfo.getAtaque() / (double)pokeInfoOp.getDefensa()) * (double)trainer.getNextMove().getBasePower();// - pokeInfoOp.getVelocidad()*10;
@@ -125,8 +125,8 @@ public class Battle {
             
             
             //==Procesar daños y turnos de efectos 
-            ProccessEffects(trainer);
-            ProccessEffects(trainerOp);
+            proccessEffects(trainer, log);
+            proccessEffects(trainerOp, log);
             
             
             //Verificar si el poquemon murio y cambiarlo por otro vivo
@@ -152,7 +152,7 @@ public class Battle {
         return log;
     }
     
-    public boolean isBattlerOver()
+    public boolean isBattleOver()
     {
         boolean result = true;
         
@@ -173,20 +173,25 @@ public class Battle {
         return result;
     }
 
-    private static void ProccessEffects(Trainer trainer) {
+    private static void proccessEffects(Trainer trainer, List<String> log) {
         
         List<Effect> effects = trainer.getActivePokemon().getActiveEffects();
         for (int i = 0; i < effects.size(); i++) {
-                        //En caso de veneno
+            //En caso de veneno
             if (effects.get(i).getEffectInfo()==EffectInfo.Poison){
-                trainer.getActivePokemon().setHitPoints(trainer.getActivePokemon().getHitPoints()-effects.get(i).getEffectInfo().POISON_DAMAGE);
+                int dmg = effects.get(i).getEffectInfo().POISON_DAMAGE;
+                trainer.getActivePokemon().setHitPoints(trainer.getActivePokemon().getHitPoints()-dmg);
+                log.add(trainer.getActivePokemon().getPokeInfo().getNombre() + 
+                        " recibió " + dmg + " puntos de daño por el veneno.");
             }
             
             //Reducir turnos de efectos
             effects.get(i).decreaseRemainingTurns();
             if (effects.get(i).getRemainingTurns()==0)
             {
-                effects.remove(i);
+                Effect e = effects.remove(i);
+                log.add(trainer.getActivePokemon().getPokeInfo().getNombre() + 
+                        " se libró del efecto: " + e.getEffectInfo().name() + ".");
                 i--;
             }
         }

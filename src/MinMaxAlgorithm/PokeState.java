@@ -77,7 +77,7 @@ public class PokeState extends MinMaxState{
 
     @Override
     boolean isLeaf() {
-        return battle.isBattlerOver();
+        return battle.isBattleOver();
     }
     
 }

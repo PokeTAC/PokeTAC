@@ -21,7 +21,6 @@ import modelo.EffectInfo;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.beans.property.SimpleMapProperty;
 
 /**
  *
@@ -29,64 +28,17 @@ import javafx.beans.property.SimpleMapProperty;
  */
 public class PokeTAC {
     private static final String FILE_DIR = "Files/";
+    public static final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
+    public static final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
+    public static final int MAX_DEPTH = 10;
     private MinMaxAlgo mmAlgo;
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) {       
         MainWindow mw = new MainWindow();
-        mw.setVisible(true);
-        
-//        System.out.println("Bienvenido a PokeTAC! =D");
-//        
-//        PokeTAC pokeTAC = new PokeTAC();
-//        
-//        //GUI: Pantalla de bienvenida
-//        
-//        pokeTAC.initGame("Perejil");
-//             
-//        //GUI: Iniciar Batalla
-//        do 
-//        {
-//            pokeTAC.selectAITeam();
-//            
-//            //GUI: Seleccionar Team de usuario para la batalla
-//            pokeTAC.askUserTeam();
-//
-//            pokeTAC.initBattle();
-//            
-//            //GUI: Verificar turno de batalla o si ha terminado
-//            while (!pokeTAC.activeBattle.isBattlerOver())
-//            {
-//                
-//                Trainer nextTrainer = pokeTAC.activeBattle.nextTrainer();
-//
-//                if (nextTrainer==pokeTAC.aiTrainer)
-//                {
-//                    pokeTAC.selectAIMove();
-//                }
-//                else
-//                {
-//                    //GUI: Seleccionar movimiento usuario
-//                    pokeTAC.askUserMove();
-//                }
-//
-//                pokeTAC.activeBattle.proccessTurnLogic();
-//            }
-//
-//            //GUI: Mostrar pantalla resultado
-//            
-//            pokeTAC.endBattle();
-//            
-//            
-//        } while (askIfBattleAgain());
-//            
-//        //GUI: Mostar pantalla despedida
-//        
-//        pokeTAC.endGame();
-        
+        mw.setVisible(true);        
     }
     
     static boolean askIfBattleAgain()
@@ -97,12 +49,6 @@ public class PokeTAC {
         
         return ans.equalsIgnoreCase("s");
     }
-    
-    // << Constants >>
-    
-    public static final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
-    public static final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
-    public static final int MAX_DEPTH = 10;
     
     // << InternalFields >>
     List<PokeInfo> pokemonDB;
@@ -306,63 +252,6 @@ public class PokeTAC {
         
     }
     
-    private void endBattle()
-    {
-        activeBattle = null;
-    }
-    
-    private void endGame()
-    {
-        
-    }
-
-    private void askUserMove() {
-                
-        if (rnd.nextBoolean())
-        {
-            //CambiarPokemon
-            userTrainer.changePokemon(rnd.nextInt(MAX_POKEMON));
-        }
-        else
-        {
-            //Escojer ataque
-            userTrainer.setNextMove(userTrainer.getActivePokemon().getMovimientos().get(MAX_MOVES));
-        } 
-        
-    }
-
-    private void askUserTeam() {
-        
-        List<Pokemon> ipokemons = new ArrayList<>();
-        
-        for (int i = 0; i < MAX_POKEMON; i++) {
-            
-            PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
-            
-            List<Movement> moves = new ArrayList<>();
-            try {
-                loadDataPokeMovements(pokemon);
-            }
-            catch(IOException e){
-                System.out.println("error:PokeMovements loader");
-                e.printStackTrace();
-            }
-            for (int j = 0; j < MAX_MOVES; j++) {
-                
-                List<Movement> pokeMoves = pokemon.getMoves();
-                
-                Movement move = pokeMoves.get(rnd.nextInt(pokeMoves.size()));              
-                
-                moves.add(move);
-            }
-            
-            ipokemons.add(new Pokemon(pokemon,moves));
-        }
-        
-        userTrainer.setTeam(ipokemons);
-                
-    }
-    
     private List<PokeType> loadDataPokemonMultipliers() throws IOException{
         FileReader reader;
         File arch=null;
@@ -427,6 +316,7 @@ public class PokeTAC {
         
         return pokeTypes;    
     }
+    
     public void loadDataPokeMovements(PokeInfo pokemon) throws IOException{
         FileReader reader;
         File arch=null;

@@ -52,8 +52,8 @@ public class BattleScreen extends javax.swing.JPanel{
         updatePokemonDisplay();
         
         repaint();
-        if(logicMan.getBattle().isBattlerOver()){
-            String winnerName; if (logicMan.isUserTurn()) winnerName=logicMan.getBattle().getEntrenadores().get(0).getName(); else winnerName=logicMan.getBattle().getEntrenadores().get(1).getName();
+        if(logicMan.getBattle().isBattleOver()){
+            String winnerName; if (!logicMan.isUserTurn()) winnerName=logicMan.getBattle().getEntrenadores().get(0).getName(); else winnerName=logicMan.getBattle().getEntrenadores().get(1).getName();
             int i = JOptionPane.showConfirmDialog(pnlActions,"Ganador: " + winnerName + "\nJuego terminado. ¿Desea jugar otra vez?", "Juego terminado", JOptionPane.YES_NO_OPTION);
             if(i==0){
                 mw.restart();
