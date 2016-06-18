@@ -21,7 +21,16 @@ public class Trainer {
     private List<Pokemon> pokemons;
     private int activePokemon;
     private Movement nextMove;
+    private double[] weights;
     
+    public double[] getWeights()
+    {
+        return weights;
+    }
+    public void setWeights(double[] value)
+    {
+        weights = value;
+    }
     public List<Pokemon> getTeam(){
         return pokemons;
     }

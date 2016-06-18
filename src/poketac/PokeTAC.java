@@ -21,6 +21,8 @@ import modelo.EffectInfo;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import modelo.Indv;
+import modelo.MonoGeneticAlgoritm;
 
 /**
  *
@@ -39,6 +41,12 @@ public class PokeTAC {
     public static void main(String[] args) {       
         MainWindow mw = new MainWindow();
         mw.setVisible(true);        
+        
+        //MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(2, 0.1, 0);
+
+        //mga.CreateInitialPopulation(4,5);
+
+        //Indv[] ans = mga.ProccessGenerations(1000);
     }
     
     static boolean askIfBattleAgain()
@@ -71,6 +79,10 @@ public class PokeTAC {
     }
     
     public void initGame(String username)
+    {
+        initGame(username,"IA");       
+    }
+    public void initGame(String trainer_0_name, String trainer_1_name)
     {
 
         //load the list of maps of every type and its multipliers
@@ -118,8 +130,8 @@ public class PokeTAC {
         //Crear todo lo necesario para el AI
         //createAI();
         
-        userTrainer = new Trainer(username);
-        aiTrainer = new Trainer("IA");
+        userTrainer = new Trainer(trainer_0_name);
+        aiTrainer = new Trainer(trainer_1_name);
         mmAlgo = new MinMaxAlgo(MAX_DEPTH);
         
         rnd = new Random();
@@ -250,6 +262,16 @@ public class PokeTAC {
             return null;
         }
         
+    }
+    
+    public void setMinMaxWeightedMove(Battle battle)
+    {
+        PokeState state  = (PokeState)mmAlgo.getNextMove(new PokeState(new Battle(battle)), true);
+        if(state.getChosenMove()!= null){
+            battle.activeTrainer().setNextMove(state.getChosenMove());
+        }else{
+            battle.activeTrainer().changePokemon(state.getBattle().activeTrainer().getActivePokemonIndex());
+        }
     }
     
     private List<PokeType> loadDataPokemonMultipliers() throws IOException{
@@ -396,5 +418,33 @@ public class PokeTAC {
         return activeBattle.isUserTurn();
     }
     
+    public int weightedAutoBattle(double[] chromosomeA, double[] chromosomeB) 
+    {    
+        //Seleccionar equipos
+        selectAITeam();
+        List<Pokemon> userTeam = new ArrayList<>();
+        for (int i = 0; i < aiTrainer.getTeam().size(); i++) {
+            userTeam.add(new Pokemon(aiTrainer.getTeam().get(i)));
+        }
+        userTrainer.setTeam(userTeam);
+        
+        //Establecer pesos
+        userTrainer.setWeights(chromosomeA);
+        aiTrainer.setWeights(chromosomeB);
+        
+        //Iniciar batalla
+        activeBattle = new Battle(userTrainer,aiTrainer);
+        
+        //Ejecutar batalla
+        while (!activeBattle.isBattleOver())
+        {
+            setMinMaxWeightedMove(activeBattle);
+            
+            activeBattle.proccessTurnLogic();
+        }
+        
+        //Regresar ganador
+        if (activeBattle.activeTrainer()!=userTrainer) return 0; else return 1;
+    }
     
 }

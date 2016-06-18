@@ -7,6 +7,7 @@ package MinMaxAlgorithm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import modelo.Battle;
 import modelo.Movement;
 import modelo.Pokemon;
@@ -34,14 +35,14 @@ public class PokeState extends MinMaxState{
 
     @Override
     public List<MinMaxState> findChildren() {
-        Trainer t = battle.nextTrainer();
+        Trainer t = battle.activeTrainer();
         
         List<MinMaxState> result = new ArrayList<>();
         Pokemon activePoke = t.getActivePokemon();
         
         for(Movement m : activePoke.getMovimientos()){
             Battle cpyBattle = new Battle(battle);
-            cpyBattle.nextTrainer().setNextMove(m);
+            cpyBattle.activeTrainer().setNextMove(m);
             cpyBattle.proccessTurnLogic();
             PokeState child = new PokeState(cpyBattle);
             child.chosenMove = m;
@@ -52,7 +53,7 @@ public class PokeState extends MinMaxState{
             Pokemon p = t.getTeam().get(i);
             if(p.getHitPoints()>0 && p.getId() != activePoke.getId()){
                 Battle cpyBattle = new Battle(battle);
-                cpyBattle.nextTrainer().changePokemon(i);
+                cpyBattle.activeTrainer().changePokemon(i);
                 cpyBattle.proccessTurnLogic();
                 PokeState child = new PokeState(cpyBattle);
                 child.chosenMove = null;
@@ -65,16 +66,44 @@ public class PokeState extends MinMaxState{
 
     @Override
     public void calculateHValue() {
-        int pcHP = 0, userHP = 0;
-        for(Pokemon p : battle.getEntrenadores().get(0).getTeam()){
-            userHP += p.getHitPoints();
-        }
-        for(Pokemon p : battle.getEntrenadores().get(1).getTeam()){
-            pcHP += p.getHitPoints();
-        }
-        setHValue(pcHP - userHP);
-    }
+        
+        //Si usa Heuristca 2, en funcion ha pesos
+        if (battle.getEntrenadores().get(0).getWeights()!=null)
+        {
+            //Ratio de Hitpoints
+            int inactvHP = 0, activeHP = 0;
+            for(Pokemon p : battle.activeTrainer().getTeam()){
+                activeHP += p.getHitPoints();
+            }
+            for(Pokemon p : battle.inactiveTrainer().getTeam()){
+                inactvHP += p.getHitPoints();
+            }
+            double hpRate = (inactvHP<=0)? 100 : (double)activeHP/inactvHP;
+            
+            //Ratio de poquemon vivos
+            int alive = 0;
+            for(Pokemon p : battle.activeTrainer().getTeam()){
+                alive += (p.getHitPoints()>0)? 1 : 0;
+            }
 
+            double[] w = battle.activeTrainer().getWeights();
+            
+            setHValue((int)(w[0]*hpRate + w[1]*alive)*1000);
+        }
+        //Si usa Heuristca 1, diferencia de puntos
+        else
+        {
+            int pcHP = 0, userHP = 0;
+            for(Pokemon p : battle.getEntrenadores().get(0).getTeam()){
+                userHP += p.getHitPoints();
+            }
+            for(Pokemon p : battle.getEntrenadores().get(1).getTeam()){
+                pcHP += p.getHitPoints();
+            }
+            setHValue(pcHP - userHP);
+        }
+    }
+    
     @Override
     boolean isLeaf() {
         return battle.isBattleOver();

@@ -64,16 +64,23 @@ public class Battle {
     
     // << ExternalMethods >>
     
-    public Trainer nextTrainer()
+    public Trainer activeTrainer()
     {   
         return trainers.get(nextToMove);
     }
-    
+    public Trainer inactiveTrainer()
+    {   
+        int inactiveTrainerIndex;
+        
+        if (nextToMove==0) inactiveTrainerIndex = 1; else inactiveTrainerIndex = 0;
+        
+        return trainers.get(inactiveTrainerIndex);
+    }
     
     public List<String> proccessTurnLogic()
     {
         List<String> log = new ArrayList<>();
-        Trainer trainer = nextTrainer();
+        Trainer trainer = activeTrainer();
         Trainer trainerOp; if (nextToMove==0) trainerOp = trainers.get(1); else trainerOp = trainers.get(0);
         
         PokeInfo pokeInfo = trainer.getActivePokemon().getPokeInfo();

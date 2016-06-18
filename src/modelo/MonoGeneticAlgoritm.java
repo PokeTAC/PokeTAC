@@ -5,7 +5,10 @@
  */
 package modelo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import poketac.PokeTAC;
 
 /**
  *
@@ -46,16 +49,22 @@ import java.util.Random;
         //#region << InternaFields >>
 
         Random rnd;
+        PokeTAC poketac;
 
         //#endregion
 
 
         public MonoGeneticAlgoritm(int crossPoint, double mutateProbability, int randomSeed)
         {
+            //Iniciar campos
             this.crossPoint = crossPoint;
             this.mutateProbability = mutateProbability;
             initialPopulation = new Indv[0];
             if (randomSeed < 0) rnd = new Random(); else rnd = new Random(randomSeed);
+            
+            //Iniciar poketac para evaluar el fitness
+            poketac = new PokeTAC();
+            poketac.initGame("AI_0","AI_1");
         }
 
 
@@ -77,6 +86,8 @@ import java.util.Random;
 
                 initialPopulation[i] = new Indv(chromosome);
             }
+            
+            ProccessFitness(initialPopulation);
         }
     
 
@@ -137,6 +148,7 @@ import java.util.Random;
 
         //#endregion
 
+        
         //#region << InternalMethods >>
 
         private Indv GetRandomByFitness(Indv[] indiv, int sumFitness)
@@ -166,13 +178,30 @@ import java.util.Random;
             for (int i = 0; i < individuals.length; i++) {
                 for (int j = 0; j < individuals.length; j++) {
                     if (i!=j)
-                    {
+                    {   
                         //Batalla entre individuals[i] y individuals[j]
+                        Indv winner = Battle(individuals[i],individuals[j]);
+                        winner.fitness++;
                     }
                 }
+            }            
+        }
+        
+        private Indv Battle(Indv a, Indv b)
+        {       
+            //¿Los poquemon y sus movimientos deben ser los mismos para ambos jugadores?
+            //¿Se debe usar los diferentes poquemon en cada batalla?
+                        
+            int winTrainer = poketac.weightedAutoBattle(a.chromosome,b.chromosome);
+            
+            if (winTrainer==0)
+            {
+                return a;
             }
-            
-            
+            else
+            {
+                return b;
+            }
         }
         
         //#endregion

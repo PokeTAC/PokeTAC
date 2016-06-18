@@ -24,7 +24,7 @@ package modelo;
         {
             return fitness;
         }
-        public void setFirness(int value)
+        public void setFitness(int value)
         {
             fitness = value;
         }
