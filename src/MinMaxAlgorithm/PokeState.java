@@ -67,7 +67,7 @@ public class PokeState extends MinMaxState{
     @Override
     public void calculateHValue() {
         
-        //Si usa Heuristca 2, en funcion ha pesos
+        //Si usa Heuristca 2, en funcion a pesos
         if (battle.getEntrenadores().get(0).getWeights()!=null)
         {
             //Ratio de Hitpoints
@@ -88,7 +88,7 @@ public class PokeState extends MinMaxState{
 
             double[] w = battle.activeTrainer().getWeights();
             
-            setHValue((int)(w[0]*hpRate + w[1]*alive)*1000);
+            setHValue((int)((w[0]*hpRate)*1000));//setHValue((int)(w[0]*hpRate + w[1]*alive)*1000);
         }
         //Si usa Heuristca 1, diferencia de puntos
         else

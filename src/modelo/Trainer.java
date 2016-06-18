@@ -77,6 +77,7 @@ public class Trainer {
         }
         activePokemon = original.activePokemon;
         nextMove = original.nextMove;
+        weights = original.getWeights().clone();
     }
     
     public void changePokemon(int index)

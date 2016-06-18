@@ -5,6 +5,7 @@
  */
 package modelo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -109,7 +110,15 @@ public class Battle {
                     //Calcular daño: Damage = (Atck/Def_op)*base_power 
                     double damage = ((double)pokeInfo.getAtaque() / (double)pokeInfoOp.getDefensa()) * (double)trainer.getNextMove().getBasePower();// - pokeInfoOp.getVelocidad()*10;
                     //Multiplicador de tipo
-                    double multiplier = trainer.getNextMove().getPokeType().getMultiplier(trainerOp.getActivePokemon().getPokeInfo().getPokeTypes());
+                    double multiplier = 1;
+                    try {
+                        multiplier = trainer.getNextMove().getPokeType().getMultiplier(trainerOp.getActivePokemon().getPokeInfo().getPokeTypes());
+                    }
+                    catch(Exception e){
+                        System.out.println("error:PokeMultiplier use");
+                        e.printStackTrace();
+                    }
+
                     damage *= multiplier;
                     //Para que no baje tan rapido
                     damage /= 5;
@@ -180,6 +189,30 @@ public class Battle {
         return result;
     }
 
+    public Trainer getLoser()
+    {
+        boolean result = true;
+        
+        for (Trainer trainer : trainers)
+        {
+            result = true;
+          
+            List<Pokemon> ipokemons = trainer.getTeam();           
+            for (Pokemon ipokemon : ipokemons)
+            {
+                if (ipokemon.getHitPoints()>0) 
+                {
+                    result = false;
+                    break;
+                }
+            }
+            
+            if(result == true) return trainer;
+        }
+        
+        return null;
+    }
+    
     private static void proccessEffects(Trainer trainer, List<String> log) {
         
         List<Effect> effects = trainer.getActivePokemon().getActiveEffects();

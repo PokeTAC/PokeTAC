@@ -32,21 +32,21 @@ public class PokeTAC {
     private static final String FILE_DIR = "Files/";
     public static final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
     public static final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
-    public static final int MAX_DEPTH = 10;
+    public static final int MAX_DEPTH = 2;
     private MinMaxAlgo mmAlgo;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {       
-        MainWindow mw = new MainWindow();
-        mw.setVisible(true);        
+        //MainWindow mw = new MainWindow();
+        //mw.setVisible(true);        
         
-        //MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(2, 0.1, 0);
+        MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(1, 0.1, 0);
 
-        //mga.CreateInitialPopulation(4,5);
+        mga.CreateInitialPopulation(2,5);
 
-        //Indv[] ans = mga.ProccessGenerations(1000);
+        Indv[] ans = mga.ProccessGenerations(1000);
     }
     
     static boolean askIfBattleAgain()
@@ -117,14 +117,14 @@ public class PokeTAC {
                     System.out.println("error:PokeMovements loader");
                     e.printStackTrace();
                 }
-            //Intercambiar tipos por los cargados en loadDataPokemonMultipliers
-            List<PokeType> types=pokemonDB.get(i).getPokeTypes();
-            List<PokeType> newTypes = new ArrayList();
-            for(PokeType pt : types)
-            {
-                newTypes.add(FindPokeTypeByName(pt.getName()));
-            }
-            pokemonDB.get(i).setTipos(newTypes);
+            ////Intercambiar tipos por los cargados en loadDataPokemonMultipliers
+            //List<PokeType> types=pokemonDB.get(i).getPokeTypes();
+            //List<PokeType> newTypes = new ArrayList();
+            //for(PokeType pt : types)
+            //{
+            //    newTypes.add(FindPokeTypeByName(pt.getName()));
+            //}
+            //pokemonDB.get(i).setTipos(newTypes);
             
         }
         //Crear todo lo necesario para el AI
@@ -195,13 +195,13 @@ public class PokeTAC {
             
             PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
            
-            try {
-                loadDataPokeMovements(pokemon);
-            }
-            catch(IOException e){
-                System.out.println("error:PokeMovements loader");
-                e.printStackTrace();
-            }
+            //try {
+            //    loadDataPokeMovements(pokemon);
+            //}
+            //catch(IOException e){
+            //    System.out.println("error:PokeMovements loader");
+            //    e.printStackTrace();
+            //}
             
             List<Movement> moves = new ArrayList<>();
             for (int j = 0; j < MAX_MOVES; j++) {
@@ -210,7 +210,7 @@ public class PokeTAC {
                 
                 Movement move = pokeMoves.get(rnd.nextInt(pokeMoves.size()));              
                 
-                moves.add(move);
+                moves.add(move); //TODO: Falta verificar que no se repita
             }
             
             ipokemons.add(new Pokemon(pokemon,moves));
@@ -226,8 +226,13 @@ public class PokeTAC {
  
     public Movement selectAIMove()
     {
+        return setAIRandomMove(aiTrainer);
+    }
+    
+    public Movement setAIRandomMove(Trainer trainer)
+    {
         int counter = 0;
-        for(Pokemon p : aiTrainer.getTeam()){
+        for(Pokemon p : trainer.getTeam()){
             if(p.getHitPoints()>0) counter++;
         }
         
@@ -236,22 +241,22 @@ public class PokeTAC {
             //CambiarPokemon
             int index = rnd.nextInt(MAX_POKEMON);
             Pokemon selPoke = null;
-            while(index == aiTrainer.getActivePokemonIndex() || selPoke == null || selPoke.getHitPoints()==0){
+            while(index == trainer.getActivePokemonIndex() || selPoke == null || selPoke.getHitPoints()==0){
                 index = rnd.nextInt(MAX_POKEMON);
-                selPoke = aiTrainer.getTeam().get(index);
+                selPoke = trainer.getTeam().get(index);
             }
-            aiTrainer.changePokemon(index);
+            trainer.changePokemon(index);
             return null;
         }
         else
         {
             //Escojer ataque
-            Movement m = aiTrainer.getActivePokemon().getMovimientos().get(rnd.nextInt(MAX_MOVES));
-            aiTrainer.setNextMove(m);
+            Movement m = trainer.getActivePokemon().getMovimientos().get(rnd.nextInt(MAX_MOVES));
+            trainer.setNextMove(m);
             return m;
         }     
     }
-    
+        
     public Movement selectAIMinMaxMove(){
         PokeState state  = (PokeState)mmAlgo.getNextMove(new PokeState(new Battle(activeBattle)), true);
         if(state.getChosenMove()!= null){
@@ -270,7 +275,7 @@ public class PokeTAC {
         if(state.getChosenMove()!= null){
             battle.activeTrainer().setNextMove(state.getChosenMove());
         }else{
-            battle.activeTrainer().changePokemon(state.getBattle().activeTrainer().getActivePokemonIndex());
+            battle.activeTrainer().changePokemon(state.getBattle().inactiveTrainer().getActivePokemonIndex());
         }
     }
     
@@ -436,15 +441,26 @@ public class PokeTAC {
         activeBattle = new Battle(userTrainer,aiTrainer);
         
         //Ejecutar batalla
+        int maxTurns = 101;
+        int countTurns = 1;
         while (!activeBattle.isBattleOver())
         {
-            setMinMaxWeightedMove(activeBattle);
+            //En caso se halla llegado a un bucle infinito
+            if ((countTurns%maxTurns)==0) 
+                setAIRandomMove(activeBattle.activeTrainer());
+            else
+                setMinMaxWeightedMove(activeBattle);
+            //En caso el bucle no se soluciona
+            if (countTurns==1000)
+                return rnd.nextInt(2);
             
             activeBattle.proccessTurnLogic();
+            
+            countTurns++;
         }
         
         //Regresar ganador
-        if (activeBattle.activeTrainer()!=userTrainer) return 0; else return 1;
+        if (activeBattle.getLoser()!=userTrainer) return 0; else return 1;
     }
     
 }

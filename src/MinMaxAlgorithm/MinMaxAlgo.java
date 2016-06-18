@@ -6,6 +6,7 @@
 package MinMaxAlgorithm;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -44,8 +45,10 @@ public class MinMaxAlgo {
                 else{
                     if(max && bestChild.getHValue()<child.getHValue())
                         bestChild = child;
-                    if(!max && bestChild.getHValue()>child.getHValue())
+                    else if(!max && bestChild.getHValue()>child.getHValue())
                         bestChild = child;
+                    else if (bestChild.getHValue()==child.getHValue())
+                        if((new Random()).nextBoolean()) bestChild = child;
                 }
                 
                 //Update the state's alpha/beta value and check if we must prune
