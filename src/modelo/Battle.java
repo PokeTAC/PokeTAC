@@ -115,8 +115,8 @@ public class Battle {
                         multiplier = trainer.getNextMove().getPokeType().getMultiplier(trainerOp.getActivePokemon().getPokeInfo().getPokeTypes());
                     }
                     catch(Exception e){
-                        System.out.println("error:PokeMultiplier use");
-                        e.printStackTrace();
+                        //System.out.println("error:PokeMultiplier use");
+                        //e.printStackTrace();
                     }
 
                     damage *= multiplier;

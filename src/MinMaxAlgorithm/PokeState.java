@@ -85,10 +85,11 @@ public class PokeState extends MinMaxState{
             for(Pokemon p : battle.activeTrainer().getTeam()){
                 alive += (p.getHitPoints()>0)? 1 : 0;
             }
-
+            double aliveRate = (double)alive/4;
+            
             double[] w = battle.activeTrainer().getWeights();
             
-            setHValue((int)((w[0]*hpRate)*1000));//setHValue((int)(w[0]*hpRate + w[1]*alive)*1000);
+            setHValue((int)((w[0]*hpRate + w[1]*aliveRate)*1000));
         }
         //Si usa Heuristca 1, diferencia de puntos
         else

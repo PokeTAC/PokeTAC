@@ -98,11 +98,15 @@ import poketac.PokeTAC;
 
         public Indv[] ProccessGenerations(int minFitness, int maxGenerations)
         {
-
+            System.out.println("Iniciando proceso...");
+            
             Indv[] individuals = (Indv[])initialPopulation.clone();
 
             for (int n = 0; n < maxGenerations; n++)
             {
+                System.out.println("Generación " + n + ": ");
+                PrintIndividuals(individuals);
+                
                 //== Obtener a los N hijos
                 int sumFitness = 0; boolean _break = false;
                 for (Indv indiv : individuals)
@@ -175,16 +179,21 @@ import poketac.PokeTAC;
 
         private void ProccessFitness(Indv[] individuals)
         {
+            int nulls = 0;
             for (int i = 0; i < individuals.length; i++) {
                 for (int j = 0; j < individuals.length; j++) {
                     if (i!=j)
                     {   
                         //Batalla entre individuals[i] y individuals[j]
                         Indv winner = Battle(individuals[i],individuals[j]);
-                        winner.fitness++;
+                        
+                        if (winner!=null)
+                            winner.fitness++;
+                        else
+                            nulls++;
                     }
                 }
-            }            
+            }
         }
         
         private Indv Battle(Indv a, Indv b)
@@ -198,10 +207,31 @@ import poketac.PokeTAC;
             {
                 return a;
             }
-            else
+            else if (winTrainer==1)
             {
                 return b;
             }
+            else
+            {
+                return null;
+            }
+        }
+        
+        private void PrintIndividuals(Indv[] individuals)
+        {
+            String s = "";
+            for (int i = 0; i < individuals.length; i++) {
+                
+                s += "[";
+                
+                for (int j = 0; j < individuals[i].chromosome.length; j++) {
+                    s += String.format("%.2f", individuals[i].chromosome[j]);
+                    if (j<individuals[i].chromosome.length-1) s+= " ";
+                }
+                s += "] ";
+                
+            }
+            System.out.println(s);
         }
         
         //#endregion

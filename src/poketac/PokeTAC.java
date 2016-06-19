@@ -441,7 +441,7 @@ public class PokeTAC {
         activeBattle = new Battle(userTrainer,aiTrainer);
         
         //Ejecutar batalla
-        int maxTurns = 101;
+        int maxTurns = 25;
         int countTurns = 1;
         while (!activeBattle.isBattleOver())
         {
@@ -451,8 +451,8 @@ public class PokeTAC {
             else
                 setMinMaxWeightedMove(activeBattle);
             //En caso el bucle no se soluciona
-            if (countTurns==1000)
-                return rnd.nextInt(2);
+            if (countTurns==60)
+                return -1;
             
             activeBattle.proccessTurnLogic();
             
