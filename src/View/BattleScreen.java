@@ -5,6 +5,7 @@
  */
 package View;
 
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -17,6 +18,8 @@ import poketac.PokeTAC;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -33,10 +36,25 @@ public class BattleScreen extends javax.swing.JPanel{
     private PokemonStatus user;
     BufferedImage imgUser=null,imgPc=null,background=null;
     //ImageIcon imgUser=null,imgPc=null;
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g); //To change body of generated methods, choose Tools | Templates.
+        if(background!=null){
+            g.drawImage(background, 0, 0, this.getWidth(), this.getHeight()-pnlBottom.getHeight(), this);
+        }
+    }
     
     
     public BattleScreen(MainWindow mw, PokeTAC logicMan) {
+        
         initComponents();
+        String route="Files/battleground2.png";
+        try {
+            background=ImageIO.read(new File(route));
+        } catch (IOException ex) {
+            Logger.getLogger(BattleScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
         ((DefaultCaret)txtaLog.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         this.mw = mw;
         this.logicMan = logicMan;
@@ -46,13 +64,13 @@ public class BattleScreen extends javax.swing.JPanel{
     private void initPokemonStatus(){
         user = new PokemonStatus(logicMan.getBattle().getEntrenadores().get(0).getActivePokemon());
         pc = new PokemonStatus(logicMan.getBattle().getEntrenadores().get(1).getActivePokemon());
-        String route="Files/battleground.png";
-        try{
-        background=ImageIO.read(new File(route));
-        }catch (IOException e) {
-                System.out.println("error:PokeImage bg Loader");
-                e.printStackTrace();
-           }
+//        String route="Files/battleground.png";
+//        try{
+//        background=ImageIO.read(new File(route));
+//        }catch (IOException e) {
+//                System.out.println("error:PokeImage bg Loader");
+//                e.printStackTrace();
+//           }
        //pnlBattle.add(new JLabel(new ImageIcon(background)));
         updatePokemonDisplay();   
     }
@@ -153,6 +171,7 @@ public class BattleScreen extends javax.swing.JPanel{
 
         setLayout(new java.awt.BorderLayout());
 
+        pnlBottom.setOpaque(false);
         pnlBottom.setLayout(new java.awt.BorderLayout(10, 0));
 
         txtaLog.setEditable(false);
@@ -193,11 +212,14 @@ public class BattleScreen extends javax.swing.JPanel{
         add(pnlBottom, java.awt.BorderLayout.SOUTH);
 
         pnlBattle.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        pnlBattle.setOpaque(false);
         pnlBattle.setLayout(new java.awt.BorderLayout());
 
+        pnlUser.setOpaque(false);
         pnlUser.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 0, 5));
         pnlBattle.add(pnlUser, java.awt.BorderLayout.PAGE_END);
 
+        pnlAI.setOpaque(false);
         pnlAI.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 5));
         pnlBattle.add(pnlAI, java.awt.BorderLayout.PAGE_START);
 
