@@ -146,8 +146,8 @@ public class Battle {
             
             
             //==Procesar daños y turnos de efectos 
-            //proccessEffects(thread, trainer, log);
-            proccessEffects(thread, trainerOp, log);
+            proccessEffects(thread, trainer, log);
+            //proccessEffects(thread, trainerOp, log);
             
             
             //Verificar si el poquemon murio y cambiarlo por otro vivo
