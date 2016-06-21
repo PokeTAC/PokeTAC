@@ -71,6 +71,27 @@ package modelo;
             return childs;
         }
 
+                /// <summary>
+        /// Cruza todos los cromosomas de este individuo con la pareja indicada y devuelve dos hijos resutados del cruce.
+        /// </summary>
+        public Indv[] CrossCont(Indv mate, double rate)
+        {
+            double[] child1 = new double[chromosome.length];
+            double[] child2 = new double[chromosome.length];
+
+            for (int i = 0; i < chromosome.length; i++)
+            {
+                child1[i] = this.chromosome[i]*rate + mate.chromosome[i]*(1-rate);
+                child2[i] = this.chromosome[i]*(1-rate) + mate.chromosome[i]*rate;
+            }
+
+            Indv[] childs = new Indv[2];
+            childs[0] = new Indv(child1);
+            childs[1] = new Indv(child2);
+
+            return childs;
+        }
+        
         public String ToString()
         {
             String s = "";

@@ -43,6 +43,11 @@ import poketac.PokeTAC;
         {
             mutateProbability = value;
         }
+        
+        double crossType;
+        
+        double numTeams;
+        
         //#endregion
 
 
@@ -54,13 +59,15 @@ import poketac.PokeTAC;
         //#endregion
 
 
-        public MonoGeneticAlgoritm(int crossPoint, double mutateProbability, int randomSeed)
+        public MonoGeneticAlgoritm(int crossPoint, double mutateProbability, int randomSeed, int crossType, int numTeams)
         {
             //Iniciar campos
             this.crossPoint = crossPoint;
             this.mutateProbability = mutateProbability;
             initialPopulation = new Indv[0];
             if (randomSeed < 0) rnd = new Random(); else rnd = new Random(randomSeed);
+            this.crossType = crossType;
+            this.numTeams = numTeams;
             
             //Iniciar poketac para evaluar el fitness
             poketac = new PokeTAC();
@@ -132,7 +139,11 @@ import poketac.PokeTAC;
                     Indv parent1 = GetRandomByFitness(individuals, sumFitness);
                     Indv parent2 = GetRandomByFitness(individuals, sumFitness);
                     //Obtener 2 hijos
-                    Indv[] _2childs = parent1.Cross(parent2, crossPoint);
+                    Indv[] _2childs;
+                    if (crossType==0) 
+                        _2childs = parent1.Cross(parent2, crossPoint);
+                    else
+                        _2childs = parent1.CrossCont(parent2, (double)1/crossPoint);
                     //Mutar un hijo
                     if (rnd.nextDouble() < mutateProbability && n < maxGenerations - 1)
                     {
@@ -190,21 +201,29 @@ import poketac.PokeTAC;
 
         private void ProccessFitness(Indv[] individuals)
         {
-            int nulls = 0;
-            for (int i = 0; i < individuals.length; i++) {
-                for (int j = 0; j < individuals.length; j++) {
-                    if (i!=j)
-                    {   
-                        //Batalla entre individuals[i] y individuals[j]
-                        Indv winner = Battle(individuals[i],individuals[j]);
-                        
-                        if (winner!=null)
-                            winner.fitness++;
-                        else
-                            nulls++;
+            //Se ejecuta con 5 equipos diferentes para que el calculo sea mas exacto y no influya tanto el equipo
+            for (int h = 0; h < numTeams; h++) 
+            {
+                //Se prepara el equipo  
+                poketac.prepareAutoBattleTeam();
+                //Se prueba cada uno contra cada uno, todos con el mismo equipo
+                int nulls = 0;
+                for (int i = 0; i < individuals.length; i++) {
+                    for (int j = 0; j < individuals.length; j++) {
+                        if (i!=j)
+                        {   
+                            //Batalla entre individuals[i] y individuals[j]
+                            Indv winner = Battle(individuals[i],individuals[j]);
+
+                            if (winner!=null)
+                                winner.fitness++;
+                            else
+                                nulls++;
+                        }
                     }
                 }
             }
+
         }
         
         private Indv Battle(Indv a, Indv b)
