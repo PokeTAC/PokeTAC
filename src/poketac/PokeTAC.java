@@ -437,7 +437,7 @@ public class PokeTAC {
                 System.out.println("error:PokeImage loader"+pokemons.get(i).getNombre());
                 e.printStackTrace();
             }
-            pokemons.get(i).getPokeInfo().setImagen(imagen);
+            pokemons.get(i).getPokeInfo().setImagenB(imagen);
         }
         userTrainer.setTeam(pokemons);
         initBattle();

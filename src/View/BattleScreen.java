@@ -45,14 +45,14 @@ public class BattleScreen extends javax.swing.JPanel{
     private void initPokemonStatus(){
         user = new PokemonStatus(logicMan.getBattle().getEntrenadores().get(0).getActivePokemon());
         pc = new PokemonStatus(logicMan.getBattle().getEntrenadores().get(1).getActivePokemon());
-//        String route="Files/battleground.png";
-//        try{
-//        background=ImageIO.read(new File(route));
-//        }catch (IOException e) {
-//                System.out.println("error:PokeImage bg Loader");
-//                e.printStackTrace();
-//            }
-        
+        String route="Files/battleground.png";
+        try{
+        background=ImageIO.read(new File(route));
+        }catch (IOException e) {
+                System.out.println("error:PokeImage bg Loader");
+                e.printStackTrace();
+           }
+       //pnlBattle.add(new JLabel(new ImageIcon(background)));
         updatePokemonDisplay();   
     }
     
@@ -102,7 +102,7 @@ public class BattleScreen extends javax.swing.JPanel{
         pnlAI.removeAll();
         pc.setPokemon(logicMan.getBattle().getEntrenadores().get(1).getActivePokemon());
         user.setPokemon(logicMan.getBattle().getEntrenadores().get(0).getActivePokemon());
-        imgUser=logicMan.getBattle().getEntrenadores().get(0).getActivePokemon().getPokeInfo().getImagen();
+        imgUser=logicMan.getBattle().getEntrenadores().get(0).getActivePokemon().getPokeInfo().getImagenB();
         imgPc=logicMan.getBattle().getEntrenadores().get(1).getActivePokemon().getPokeInfo().getImagen();
         
         pnlUser.add(new JLabel(new ImageIcon(imgUser)));
@@ -112,7 +112,7 @@ public class BattleScreen extends javax.swing.JPanel{
         
         pnlAI.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
         pnlAI.add(pc);
-        pnlAI.add(new Box.Filler(new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 32767)));
+        pnlAI.add(new Box.Filler(new java.awt.Dimension(40, 0), new java.awt.Dimension(40, 0), new java.awt.Dimension(40, 32767)));
         pnlAI.add(new JLabel(new ImageIcon(imgPc)));
         revalidate();
     }

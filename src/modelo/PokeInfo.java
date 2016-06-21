@@ -19,6 +19,7 @@ public class PokeInfo {
     private int defensa;
     private int velocidad;
     private BufferedImage  imagen;
+    private BufferedImage imagenB;
     
     private List<PokeType> tipos;
     
@@ -107,5 +108,19 @@ public class PokeInfo {
      */
     public void setImagen(BufferedImage imagen) {
         this.imagen = imagen;
+    }
+
+    /**
+     * @return the imagenB
+     */
+    public BufferedImage getImagenB() {
+        return imagenB;
+    }
+
+    /**
+     * @param imagenB the imagenB to set
+     */
+    public void setImagenB(BufferedImage imagenB) {
+        this.imagenB = imagenB;
     }
 }
