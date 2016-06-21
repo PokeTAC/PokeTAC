@@ -34,7 +34,7 @@ public class PokeTAC {
     private static final String FILE_DIR = "Files/";
     public static final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
     public static final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
-    public static final int MAX_DEPTH = 2;
+    public static final int MAX_DEPTH = 4;
     private MinMaxAlgo mmAlgo;
 
     /**
@@ -44,11 +44,11 @@ public class PokeTAC {
         MainWindow mw = new MainWindow();
         mw.setVisible(true);        
         
-//        MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(1, 0.1, 0);
-//
-//        mga.CreateInitialPopulation(2,5);
-//
-//        Indv[] ans = mga.ProccessGenerations(1000);
+        //MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(3, 0.1, -1, 1, 5);
+
+        //mga.CreateInitialPopulation(4,10);
+
+        //Indv[] ans = mga.ProccessGenerations(100);
     }
     
     static boolean askIfBattleAgain()
@@ -475,15 +475,27 @@ public class PokeTAC {
         return activeBattle.isUserTurn();
     }
     
+    List<Pokemon> autoBattleTeam;
+    public void prepareAutoBattleTeam()
+    {
+        selectAITeam();
+        autoBattleTeam = aiTrainer.getTeam();
+        aiTrainer.setTeam(null);        
+    }
+    
+    
+    
     public int weightedAutoBattle(double[] chromosomeA, double[] chromosomeB) 
     {    
-        //Seleccionar equipos
-        selectAITeam();
-        List<Pokemon> userTeam = new ArrayList<>();
-        for (int i = 0; i < aiTrainer.getTeam().size(); i++) {
-            userTeam.add(new Pokemon(aiTrainer.getTeam().get(i)));
+        //Copiar equipos
+        List<Pokemon> team1 = new ArrayList<>();
+        List<Pokemon> team2 = new ArrayList<>();
+        for (int i = 0; i < autoBattleTeam.size(); i++) {
+            team1.add(new Pokemon(autoBattleTeam.get(i)));
+            team2.add(new Pokemon(autoBattleTeam.get(i)));
         }
-        userTrainer.setTeam(userTeam);
+        userTrainer.setTeam(team1);
+        aiTrainer.setTeam(team2);
         
         //Establecer pesos
         userTrainer.setWeights(chromosomeA);
