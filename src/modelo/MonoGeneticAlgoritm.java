@@ -101,12 +101,14 @@ import poketac.PokeTAC;
             System.out.println("Iniciando proceso...");
             
             Indv[] individuals = (Indv[])initialPopulation.clone();
-
+            
+            Sort(individuals);
+            
             for (int n = 0; n < maxGenerations; n++)
             {
                 System.out.println("Generación " + n + ": ");
                 PrintIndividuals(individuals);
-                
+                                
                 //== Obtener a los N hijos
                 int sumFitness = 0; boolean _break = false;
                 for (Indv indiv : individuals)
@@ -141,10 +143,19 @@ import poketac.PokeTAC;
                     if (i < individuals.length) childs[i] = _2childs[1];
                 }
 
-                individuals = childs;
-                
                 //Batallar entre ellos para obtener el Fitness
-                ProccessFitness(individuals);
+                ProccessFitness(childs);
+                Sort(childs);
+                
+                //copiar solo los mejores
+                int numkeep = childs.length*2/5; 
+                for (int i = numkeep; i < childs.length; i++) {
+                    individuals[i-numkeep] = childs[i];
+                }
+
+                //Ordenar
+                Sort(individuals);
+                
             }           
             
             return individuals;
@@ -217,7 +228,7 @@ import poketac.PokeTAC;
             }
         }
         
-        private void PrintIndividuals(Indv[] individuals)
+        private static void PrintIndividuals(Indv[] individuals)
         {
             String s = "";
             for (int i = 0; i < individuals.length; i++) {
@@ -228,10 +239,25 @@ import poketac.PokeTAC;
                     s += String.format("%.2f", individuals[i].chromosome[j]);
                     if (j<individuals[i].chromosome.length-1) s+= " ";
                 }
-                s += "] ";
+                
+                s += "]." + individuals[i].getFitness() + " ";
                 
             }
             System.out.println(s);
+        }
+        
+        private static void Sort(Indv[] individuals)
+        {
+            for (int i = 1; i < individuals.length; i++) {
+                for (int j = 0; j < individuals.length - i; j++) {
+                    if (individuals[j].getFitness() > individuals[j+1].getFitness())
+                    {
+                        Indv aux = individuals[j];
+                        individuals[j] = individuals[j+1];
+                        individuals[j+1] = aux;
+                    }
+                }
+            }
         }
         
         //#endregion

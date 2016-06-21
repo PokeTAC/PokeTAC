@@ -23,7 +23,7 @@ public class PokeType {
     public String getName() {
         return name;
     }
-    double getMultiplier(List<PokeType> pokeTypes) {
+    public double getMultiplier(List<PokeType> pokeTypes) {
       
         double multiplier = 1;
         

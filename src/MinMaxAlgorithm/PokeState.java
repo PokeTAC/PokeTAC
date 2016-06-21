@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import modelo.Battle;
+import modelo.Effect;
 import modelo.Movement;
 import modelo.Pokemon;
 import modelo.Trainer;
+import poketac.PokeTAC;
 
 /**
  *
@@ -85,11 +87,47 @@ public class PokeState extends MinMaxState{
             for(Pokemon p : battle.activeTrainer().getTeam()){
                 alive += (p.getHitPoints()>0)? 1 : 0;
             }
-            double aliveRate = (double)alive/4;
+            double aliveRate = (double)alive/PokeTAC.MAX_POKEMON;
+            
+            //Pokemon de oponentes con effectos activos
+            int pokeEffected = 0;
+            for(Pokemon poke : battle.inactiveTrainer().getTeam())
+            {
+                for(Effect effect : poke.getActiveEffects())
+                {
+                    boolean effected = false;
+                    switch (effect.getEffectInfo())
+                    {
+                        case Paralyze:
+                        case Poison:
+                        case Sleep:
+                            pokeEffected++; 
+                            effected = true;
+                    }
+                    if (effected) break;
+                }
+            }
+            double effectedRate = pokeEffected/PokeTAC.MAX_POKEMON;
+            
+            //Cantidad de movimientos que tienen ventaja
+            int advantageCount = 0;
+            for(Movement move : battle.activeTrainer().getActivePokemon().getMovimientos())
+            {
+                double multiplier = 1;
+                try {
+                    multiplier = move.getPokeType().getMultiplier(battle.inactiveTrainer().getActivePokemon().getPokeInfo().getPokeTypes());
+                }
+                catch(Exception e){
+                    //System.out.println("error:PokeMultiplier use");
+                    //e.printStackTrace();
+                }
+                if (multiplier > 1) advantageCount++;
+            }
+            double advantageRate = (double)advantageCount/PokeTAC.MAX_POKEMON;
             
             double[] w = battle.activeTrainer().getWeights();
             
-            setHValue((int)((w[0]*hpRate + w[1]*aliveRate)*1000));
+            setHValue((int)((w[0]*hpRate + w[1]*aliveRate + w[2]*effectedRate + w[3]*advantageRate)*1000));
         }
         //Si usa Heuristca 1, diferencia de puntos
         else
