@@ -121,19 +121,21 @@ public class Pokemon {
         return activeEffects;
     }
 
-    void activateEffect(EffectInfo effect) {
-        if(effect == EffectInfo.None) return;
+    boolean activateEffect(EffectInfo effect) {
+        if(effect == EffectInfo.None) return false;
 
         for(Effect activeEffect : activeEffects)
         {
             if (activeEffect.getEffectInfo() == effect)
             {
-                activeEffects.remove(activeEffect);
-                break;
+                //activeEffects.remove(activeEffect);
+                //break;
+                return false;
             }
         }
         
         activeEffects.add(new Effect(effect, effect.EFFECT_DURATION));
+        return true;
     }
 
     @Override
