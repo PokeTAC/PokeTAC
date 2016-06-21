@@ -37,7 +37,7 @@ public class BattleScreen extends javax.swing.JPanel{
     BufferedImage imgUser=null,imgPc=null,background=null;
     //ImageIcon imgUser=null,imgPc=null;
     
-
+    
     public BattleScreen(MainWindow mw, PokeTAC logicMan) {
         initComponents();
         ((DefaultCaret)txtaLog.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -120,14 +120,15 @@ public class BattleScreen extends javax.swing.JPanel{
         
         pnlUser.add(new JLabel(new ImageIcon(imgUser)));
         // pnlUser.add(new JLabel(imgUser));
-        pnlUser.add(new Box.Filler(new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 32767)));
+        pnlUser.add(new Box.Filler(new java.awt.Dimension(200, 0), new java.awt.Dimension(200, 0), new java.awt.Dimension(200, 32767)));
         pnlUser.add(user);
         pnlUser.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
         
         pnlAI.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
         pnlAI.add(pc);
-        pnlAI.add(new Box.Filler(new java.awt.Dimension(40, 0), new java.awt.Dimension(40, 0), new java.awt.Dimension(40, 32767)));
+        pnlAI.add(new Box.Filler(new java.awt.Dimension(200, 0), new java.awt.Dimension(200, 0), new java.awt.Dimension(200, 32767)));
         pnlAI.add(new JLabel(new ImageIcon(imgPc)));
+        
        // pnlAI.add(new JLabel(imgPc));
         revalidate();
         repaint();
