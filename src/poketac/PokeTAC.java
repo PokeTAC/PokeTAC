@@ -25,6 +25,7 @@ import modelo.Indv;
 import modelo.MonoGeneticAlgoritm;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 /**
  *
  * @author DiegoAndres
@@ -192,7 +193,7 @@ public class PokeTAC {
     {
         List<Pokemon> ipokemons = new ArrayList<>();
         BufferedImage imagen = null;
-        
+        //ImageIcon imagen=null;
         for (int i = 0; i < MAX_POKEMON; i++) {
             
             PokeInfo pokemon = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
@@ -214,7 +215,15 @@ public class PokeTAC {
                 
                 moves.add(move); //TODO: Falta verificar que no se repita
             }
+            ///////////////////////////////////////////////
             
+//            imagen=null;
+//            String route=FILE_DIR;
+//            String fname="f_"+pokemon.getNombre();
+//            route=route+fname+".gif";
+//            imagen=new ImageIcon(route);
+            
+            /////////////////////////////////////////////////
             try {
                     imagen=null;
                     String route=FILE_DIR;
@@ -425,7 +434,18 @@ public class PokeTAC {
     public void initBattle(List<Pokemon> pokemons){
         selectAITeam();
         BufferedImage imagen = null;
+        //ImageIcon imagen=null;
         for(int i=0;i<pokemons.size();i++){
+            ///////////////////////////////////////////////
+            
+//            imagen=null;
+//            String route=FILE_DIR;
+//            String fname="b_"+pokemons.get(i).getPokeInfo().getNombre();
+//            route=route+fname+".gif";
+//            imagen=new ImageIcon(route);
+            
+            /////////////////////////////////////////////////
+            
             try {
                     imagen=null;
                     String route=FILE_DIR;

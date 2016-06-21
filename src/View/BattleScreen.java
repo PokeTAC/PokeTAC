@@ -33,7 +33,8 @@ public class BattleScreen extends javax.swing.JPanel{
     private PokemonStatus pc;
     private PokemonStatus user;
     BufferedImage imgUser=null,imgPc=null,background=null;
-        
+    //ImageIcon imgUser=null,imgPc=null;
+    
 
     public BattleScreen(MainWindow mw, PokeTAC logicMan) {
         initComponents();
@@ -106,6 +107,7 @@ public class BattleScreen extends javax.swing.JPanel{
         imgPc=logicMan.getBattle().getEntrenadores().get(1).getActivePokemon().getPokeInfo().getImagen();
         
         pnlUser.add(new JLabel(new ImageIcon(imgUser)));
+        // pnlUser.add(new JLabel(imgUser));
         pnlUser.add(new Box.Filler(new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 32767)));
         pnlUser.add(user);
         pnlUser.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
@@ -114,6 +116,7 @@ public class BattleScreen extends javax.swing.JPanel{
         pnlAI.add(pc);
         pnlAI.add(new Box.Filler(new java.awt.Dimension(40, 0), new java.awt.Dimension(40, 0), new java.awt.Dimension(40, 32767)));
         pnlAI.add(new JLabel(new ImageIcon(imgPc)));
+       // pnlAI.add(new JLabel(imgPc));
         revalidate();
     }
     
