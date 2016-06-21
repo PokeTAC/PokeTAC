@@ -7,6 +7,7 @@ package modelo;
 
 import java.util.List;
 import java.awt.image.*;
+import javax.swing.ImageIcon;
 /**
  *
  * @author DiegoAndres
@@ -19,7 +20,9 @@ public class PokeInfo {
     private int defensa;
     private int velocidad;
     private BufferedImage  imagen;
-    
+    private BufferedImage imagenB;
+    //private ImageIcon imagen;
+    //private ImageIcon imagenB;
     private List<PokeType> tipos;
     
     private List<Movement> moves;
@@ -108,4 +111,49 @@ public class PokeInfo {
     public void setImagen(BufferedImage imagen) {
         this.imagen = imagen;
     }
+
+    /**
+     * @return the imagenB
+     */
+    public BufferedImage getImagenB() {
+        return imagenB;
+    }
+
+    /**
+     * @param imagenB the imagenB to set
+     */
+    public void setImagenB(BufferedImage imagenB) {
+        this.imagenB = imagenB;
+    }
+    
+//    
+//    
+//    /**
+//     * @return the imagen
+//     */
+//    public ImageIcon getImagen() {
+//        return imagen;
+//    }
+//
+//    /**
+//     * @param imagen the imagen to set
+//     */
+//    public void setImagen(ImageIcon imagen) {
+//        this.imagen = imagen;
+//    }
+//
+//    /**
+//     * @return the imagenB
+//     */
+//    public ImageIcon getImagenB() {
+//        return imagenB;
+//    }
+//
+//    /**
+//     * @param imagenB the imagenB to set
+//     */
+//    public void setImagenB(ImageIcon imagenB) {
+//        this.imagenB = imagenB;
+//    }
+//    
 }
