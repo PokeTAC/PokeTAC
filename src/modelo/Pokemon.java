@@ -122,6 +122,7 @@ public class Pokemon {
     }
 
     void activateEffect(EffectInfo effect) {
+        if(effect == EffectInfo.None) return;
 
         for(Effect activeEffect : activeEffects)
         {

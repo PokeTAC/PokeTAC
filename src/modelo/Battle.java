@@ -5,7 +5,7 @@
  */
 package modelo;
 
-import java.io.IOException;
+import View.BattleThread;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -78,7 +78,11 @@ public class Battle {
         return trainers.get(inactiveTrainerIndex);
     }
     
-    public List<String> proccessTurnLogic()
+    public List<String> proccessTurnLogic(){
+        return proccessTurnLogic(null);
+    }
+    
+    public List<String> proccessTurnLogic(BattleThread thread)
     {
         List<String> log = new ArrayList<>();
         Trainer trainer = activeTrainer();
@@ -94,7 +98,7 @@ public class Battle {
             boolean canPlay = true;
             for (Effect effect : trainer.getActivePokemon().getActiveEffects())
                 if (effect.getEffectInfo()==EffectInfo.Paralyze || effect.getEffectInfo()==EffectInfo.Sleep){
-                    log.add(pokeInfo.getNombre() + " no se puede mover!");
+                    writeToLog(thread,pokeInfo.getNombre() + " no se puede mover!");
                     canPlay = false; 
                     break;
                 }
@@ -125,13 +129,14 @@ public class Battle {
                     //Nuevo hitpoints
                     int newHitPoints = (int)(trainerOp.getActivePokemon().getHitPoints() - (int)damage);
                     trainerOp.getActivePokemon().setHitPoints(newHitPoints);
-                    log.add(pokeInfoOp.getNombre() + " recibió " + (int)damage + " puntos de daño.");
+                    writeToLog(thread,pokeInfoOp.getNombre() + " recibió " + (int)damage + " puntos de daño.");
 
                     //== Procesar efecto
                     EffectInfo effect = trainer.getNextMove().getPokeEffect();
                     trainerOp.getActivePokemon().activateEffect(effect);
+                    if(effect!=EffectInfo.None) writeToLog(thread,pokeInfoOp.getNombre() +" recibió el efecto: " + effect.name() + ".");
                 }else{
-                    log.add(pokeInfo.getNombre() + " falló!");
+                    writeToLog(thread,pokeInfo.getNombre() + " falló!");
                 }                
             }
 
@@ -141,14 +146,14 @@ public class Battle {
             
             
             //==Procesar daños y turnos de efectos 
-            proccessEffects(trainer, log);
-            proccessEffects(trainerOp, log);
+            //proccessEffects(thread, trainer, log);
+            proccessEffects(thread, trainerOp, log);
             
             
             //Verificar si el poquemon murio y cambiarlo por otro vivo
             if (trainerOp.getActivePokemon().getHitPoints()==0)
             {
-                log.add(pokeInfoOp.getNombre() + " perdió el conocimiento.");
+                writeToLog(thread,pokeInfoOp.getNombre() + " perdió el conocimiento.");
                 List<Pokemon> pokeTeamOp = trainerOp.getTeam();
                 
                 for (int i = 0; i < pokeTeamOp.size(); i++) {
@@ -161,9 +166,7 @@ public class Battle {
                 } 
             }
         }
-        
-        
-        
+            
         nextToMove++; if (nextToMove==trainers.size()) nextToMove = 0;
         return log;
     }
@@ -213,7 +216,7 @@ public class Battle {
         return null;
     }
     
-    private static void proccessEffects(Trainer trainer, List<String> log) {
+    private static void proccessEffects(BattleThread thread,Trainer trainer, List<String> log) {
         
         List<Effect> effects = trainer.getActivePokemon().getActiveEffects();
         for (int i = 0; i < effects.size(); i++) {
@@ -221,7 +224,7 @@ public class Battle {
             if (effects.get(i).getEffectInfo()==EffectInfo.Poison){
                 int dmg = effects.get(i).getEffectInfo().POISON_DAMAGE;
                 trainer.getActivePokemon().setHitPoints(trainer.getActivePokemon().getHitPoints()-dmg);
-                log.add(trainer.getActivePokemon().getPokeInfo().getNombre() + 
+                 writeToLog(thread,trainer.getActivePokemon().getPokeInfo().getNombre() + 
                         " recibió " + dmg + " puntos de daño por el veneno.");
             }
             
@@ -230,18 +233,21 @@ public class Battle {
             if (effects.get(i).getRemainingTurns()==0)
             {
                 Effect e = effects.remove(i);
-                log.add(trainer.getActivePokemon().getPokeInfo().getNombre() + 
+                 writeToLog(thread,trainer.getActivePokemon().getPokeInfo().getNombre() + 
                         " se libró del efecto: " + e.getEffectInfo().name() + ".");
                 i--;
             }
         }
     }
     
+    private static void writeToLog(BattleThread thread, String str){
+        if(thread!=null){
+            thread.writeToScreen(str);
+        }
+    }
+    
     public boolean isUserTurn(){
         return nextToMove == 0;
     }
-    
-    
-    
     
 }

@@ -46,6 +46,7 @@ public class MainWindow extends javax.swing.JFrame {
         pnlBackground.remove(prevPanel);
         pnlBackground.add(pnlWelcome,BorderLayout.CENTER);
         this.revalidate();
+        this.repaint();
     }
     
     public AIType getAIType(){

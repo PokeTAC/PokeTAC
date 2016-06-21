@@ -15,6 +15,6 @@ public enum EffectInfo {
     Sleep,
     Poison;
     
-    public final int EFFECT_DURATION = 7; //Como los archivos no indican nada, el efecto siempre durara 3 turnos
+    public final int EFFECT_DURATION = 3; //Como los archivos no indican nada, el efecto siempre durara 3 turnos
     public final int POISON_DAMAGE = 10;
 }
