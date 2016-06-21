@@ -18,6 +18,9 @@ import modelo.Pokemon;
 import modelo.Trainer;
 import poketac.PokeTAC;
 import java.awt.image.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 /**
@@ -29,7 +32,7 @@ public class BattleScreen extends javax.swing.JPanel{
     private final PokeTAC logicMan;
     private PokemonStatus pc;
     private PokemonStatus user;
-    BufferedImage imgUser=null,imgPc=null;
+    BufferedImage imgUser=null,imgPc=null,background=null;
         
 
     public BattleScreen(MainWindow mw, PokeTAC logicMan) {
@@ -42,6 +45,14 @@ public class BattleScreen extends javax.swing.JPanel{
     private void initPokemonStatus(){
         user = new PokemonStatus(logicMan.getBattle().getEntrenadores().get(0).getActivePokemon());
         pc = new PokemonStatus(logicMan.getBattle().getEntrenadores().get(1).getActivePokemon());
+//        String route="Files/battleground.png";
+//        try{
+//        background=ImageIO.read(new File(route));
+//        }catch (IOException e) {
+//                System.out.println("error:PokeImage bg Loader");
+//                e.printStackTrace();
+//            }
+        
         updatePokemonDisplay();   
     }
     

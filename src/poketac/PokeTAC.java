@@ -223,7 +223,7 @@ public class PokeTAC {
                     imagen = ImageIO.read(new File(route));
                     
             } catch (IOException e) {
-                System.out.println("error:PokeImage loader"+pokemon.getNombre());
+                System.out.println("error:PokeImageAI loader"+pokemon.getNombre());
                 e.printStackTrace();
             }
             pokemon.setImagen(imagen);
