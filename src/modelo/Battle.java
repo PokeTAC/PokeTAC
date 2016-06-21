@@ -133,8 +133,8 @@ public class Battle {
 
                     //== Procesar efecto
                     EffectInfo effect = trainer.getNextMove().getPokeEffect();
-                    trainerOp.getActivePokemon().activateEffect(effect);
-                    if(effect!=EffectInfo.None) writeToLog(thread,pokeInfoOp.getNombre() +" recibió el efecto: " + effect.name() + ".");
+                    boolean success =trainerOp.getActivePokemon().activateEffect(effect);
+                    if(success) writeToLog(thread,pokeInfoOp.getNombre() +" recibió el efecto: " + effect.name() + ".");
                 }else{
                     writeToLog(thread,pokeInfo.getNombre() + " falló!");
                 }                
