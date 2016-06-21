@@ -73,7 +73,7 @@ public class MainWindow extends javax.swing.JFrame {
         btnStart = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(600, 400));
 
         pnlBackground.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         pnlBackground.setLayout(new java.awt.BorderLayout());

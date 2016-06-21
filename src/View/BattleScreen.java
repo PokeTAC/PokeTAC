@@ -42,16 +42,7 @@ public class BattleScreen extends javax.swing.JPanel{
     private void initPokemonStatus(){
         user = new PokemonStatus(logicMan.getBattle().getEntrenadores().get(0).getActivePokemon());
         pc = new PokemonStatus(logicMan.getBattle().getEntrenadores().get(1).getActivePokemon());
-        imgUser=logicMan.getBattle().getEntrenadores().get(0).getActivePokemon().getPokeInfo().getImagen();
-        imgPc=logicMan.getBattle().getEntrenadores().get(1).getActivePokemon().getPokeInfo().getImagen();
-        pnlUser.add(new JLabel(new ImageIcon(imgUser)));
-        pnlUser.add(user);
-        pnlUser.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
-        
-        pnlAI.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
-        pnlAI.add(pc);
-        pnlAI.add(new JLabel(new ImageIcon(imgPc)));
-        
+        updatePokemonDisplay();   
     }
     
     public void advanceTurn(){
@@ -104,12 +95,15 @@ public class BattleScreen extends javax.swing.JPanel{
         imgPc=logicMan.getBattle().getEntrenadores().get(1).getActivePokemon().getPokeInfo().getImagen();
         
         pnlUser.add(new JLabel(new ImageIcon(imgUser)));
+        pnlUser.add(new Box.Filler(new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 32767)));
         pnlUser.add(user);
         pnlUser.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
         
         pnlAI.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
         pnlAI.add(pc);
+        pnlAI.add(new Box.Filler(new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 0), new java.awt.Dimension(20, 32767)));
         pnlAI.add(new JLabel(new ImageIcon(imgPc)));
+        revalidate();
     }
     
     private void updateLog(List<String> log){
