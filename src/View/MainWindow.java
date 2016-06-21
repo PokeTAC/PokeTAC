@@ -22,7 +22,7 @@ public class MainWindow extends javax.swing.JFrame {
     private AIType aiType = AIType.ALEATORIO;
     
     public enum AIType{
-        ALEATORIO, MINMAX;
+        ALEATORIO, MINMAX, EVOLUTIVO;
     }
 
     public MainWindow() {
@@ -129,6 +129,10 @@ public class MainWindow extends javax.swing.JFrame {
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
         logicMan.initGame(txtName.getText());
         aiType = (AIType)cbAITypes.getSelectedItem();
+        
+        if(aiType == AIType.EVOLUTIVO){
+         logicMan.getAITrainer().setWeights(new double[]{.86,.13,.83,.25});
+        }      
         pnlBackground.remove(pnlWelcome);
         PokemonSelect pnl = new PokemonSelect(this, logicMan.getAllPokemons(), true);
         prevPanel = pnl;

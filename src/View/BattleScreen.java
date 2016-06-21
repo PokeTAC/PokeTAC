@@ -79,6 +79,7 @@ public class BattleScreen extends javax.swing.JPanel{
                 Movement mov;
                 
                 switch(mw.getAIType()){
+                    case EVOLUTIVO:
                     case MINMAX:
                         mov = logicMan.selectAIMinMaxMove();
                         break;
@@ -102,7 +103,7 @@ public class BattleScreen extends javax.swing.JPanel{
     }
     
     private void advanceThread(){
-        if(bthread.isAlive()){
+        if(bthread!=null && bthread.isAlive()){
                 synchronized(bthread.monitor){
                 bthread.monitor.notify();
             }

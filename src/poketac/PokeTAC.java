@@ -527,4 +527,8 @@ public class PokeTAC {
         if (activeBattle.getLoser()!=userTrainer) return 0; else return 1;
     }
     
+    public Trainer getAITrainer(){
+        return aiTrainer;
+    }
+    
 }
