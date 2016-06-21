@@ -5,6 +5,8 @@
  */
 package View;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -15,7 +17,9 @@ import modelo.Movement;
 import modelo.Pokemon;
 import modelo.Trainer;
 import poketac.PokeTAC;
-
+import java.awt.image.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 /**
  *
  * @author Usuario
@@ -25,7 +29,8 @@ public class BattleScreen extends javax.swing.JPanel{
     private final PokeTAC logicMan;
     private PokemonStatus pc;
     private PokemonStatus user;
-
+    BufferedImage imgUser=null,imgPc=null;
+        
 
     public BattleScreen(MainWindow mw, PokeTAC logicMan) {
         initComponents();
@@ -37,12 +42,15 @@ public class BattleScreen extends javax.swing.JPanel{
     private void initPokemonStatus(){
         user = new PokemonStatus(logicMan.getBattle().getEntrenadores().get(0).getActivePokemon());
         pc = new PokemonStatus(logicMan.getBattle().getEntrenadores().get(1).getActivePokemon());
-        
+        imgUser=logicMan.getBattle().getEntrenadores().get(0).getActivePokemon().getPokeInfo().getImagen();
+        imgPc=logicMan.getBattle().getEntrenadores().get(1).getActivePokemon().getPokeInfo().getImagen();
+        pnlUser.add(new JLabel(new ImageIcon(imgUser)));
         pnlUser.add(user);
         pnlUser.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
         
         pnlAI.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
         pnlAI.add(pc);
+        pnlAI.add(new JLabel(new ImageIcon(imgPc)));
         
     }
     
@@ -88,8 +96,20 @@ public class BattleScreen extends javax.swing.JPanel{
     }
     
     private void updatePokemonDisplay(){
+        pnlUser.removeAll();
+        pnlAI.removeAll();
         pc.setPokemon(logicMan.getBattle().getEntrenadores().get(1).getActivePokemon());
         user.setPokemon(logicMan.getBattle().getEntrenadores().get(0).getActivePokemon());
+        imgUser=logicMan.getBattle().getEntrenadores().get(0).getActivePokemon().getPokeInfo().getImagen();
+        imgPc=logicMan.getBattle().getEntrenadores().get(1).getActivePokemon().getPokeInfo().getImagen();
+        
+        pnlUser.add(new JLabel(new ImageIcon(imgUser)));
+        pnlUser.add(user);
+        pnlUser.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
+        
+        pnlAI.add(new Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767)));
+        pnlAI.add(pc);
+        pnlAI.add(new JLabel(new ImageIcon(imgPc)));
     }
     
     private void updateLog(List<String> log){

@@ -6,7 +6,7 @@
 package modelo;
 
 import java.util.List;
-
+import java.awt.image.*;
 /**
  *
  * @author DiegoAndres
@@ -18,6 +18,7 @@ public class PokeInfo {
     private int ataque;
     private int defensa;
     private int velocidad;
+    private BufferedImage  imagen;
     
     private List<PokeType> tipos;
     
@@ -92,5 +93,19 @@ public class PokeInfo {
     @Override
     public String toString() {
         return nombre;
+    }
+
+    /**
+     * @return the imagen
+     */
+    public BufferedImage getImagen() {
+        return imagen;
+    }
+
+    /**
+     * @param imagen the imagen to set
+     */
+    public void setImagen(BufferedImage imagen) {
+        this.imagen = imagen;
     }
 }

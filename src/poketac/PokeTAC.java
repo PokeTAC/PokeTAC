@@ -23,7 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import modelo.Indv;
 import modelo.MonoGeneticAlgoritm;
-
+import java.awt.image.*;
+import javax.imageio.ImageIO;
 /**
  *
  * @author DiegoAndres
@@ -39,14 +40,14 @@ public class PokeTAC {
      * @param args the command line arguments
      */
     public static void main(String[] args) {       
-        //MainWindow mw = new MainWindow();
-        //mw.setVisible(true);        
+        MainWindow mw = new MainWindow();
+        mw.setVisible(true);        
         
-        MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(1, 0.1, 0);
-
-        mga.CreateInitialPopulation(2,5);
-
-        Indv[] ans = mga.ProccessGenerations(1000);
+//        MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(1, 0.1, 0);
+//
+//        mga.CreateInitialPopulation(2,5);
+//
+//        Indv[] ans = mga.ProccessGenerations(1000);
     }
     
     static boolean askIfBattleAgain()
@@ -190,6 +191,7 @@ public class PokeTAC {
     public void selectAITeam()
     {
         List<Pokemon> ipokemons = new ArrayList<>();
+        BufferedImage imagen = null;
         
         for (int i = 0; i < MAX_POKEMON; i++) {
             
@@ -213,9 +215,24 @@ public class PokeTAC {
                 moves.add(move); //TODO: Falta verificar que no se repita
             }
             
+            try {
+                    imagen=null;
+                    String route=FILE_DIR;
+                    String fname="f_"+pokemon.getNombre();
+                    route=route+fname+".gif";
+                    imagen = ImageIO.read(new File(route));
+                    
+            } catch (IOException e) {
+                System.out.println("error:PokeImage loader"+pokemon.getNombre());
+                e.printStackTrace();
+            }
+            pokemon.setImagen(imagen);
+            
             ipokemons.add(new Pokemon(pokemon,moves));
+            
+            
         }
-                
+        
         aiTrainer.setTeam(ipokemons);
     }
     
@@ -407,6 +424,21 @@ public class PokeTAC {
     
     public void initBattle(List<Pokemon> pokemons){
         selectAITeam();
+        BufferedImage imagen = null;
+        for(int i=0;i<pokemons.size();i++){
+            try {
+                    imagen=null;
+                    String route=FILE_DIR;
+                    String fname="b_"+pokemons.get(i).getPokeInfo().getNombre();
+                    route=route+fname+".gif";
+                    imagen = ImageIO.read(new File(route));
+                    
+            } catch (IOException e) {
+                System.out.println("error:PokeImage loader"+pokemons.get(i).getNombre());
+                e.printStackTrace();
+            }
+            pokemons.get(i).getPokeInfo().setImagen(imagen);
+        }
         userTrainer.setTeam(pokemons);
         initBattle();
     }
