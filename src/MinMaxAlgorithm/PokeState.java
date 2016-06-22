@@ -21,9 +21,10 @@ import poketac.PokeTAC;
  */
 public class PokeState extends MinMaxState{
     private Battle battle;
+    private int pcIndex;
     private Movement chosenMove;
     
-    public PokeState(Battle battle){
+    public PokeState(Battle battle, int pcIndex){
         this.battle = battle;
     }
     
@@ -46,7 +47,7 @@ public class PokeState extends MinMaxState{
             Battle cpyBattle = new Battle(battle);
             cpyBattle.activeTrainer().setNextMove(m);
             cpyBattle.proccessTurnLogic();
-            PokeState child = new PokeState(cpyBattle);
+            PokeState child = new PokeState(cpyBattle, pcIndex);
             child.chosenMove = m;
             result.add(child);
         }
@@ -57,7 +58,7 @@ public class PokeState extends MinMaxState{
                 Battle cpyBattle = new Battle(battle);
                 cpyBattle.activeTrainer().changePokemon(i);
                 cpyBattle.proccessTurnLogic();
-                PokeState child = new PokeState(cpyBattle);
+                PokeState child = new PokeState(cpyBattle, pcIndex);
                 child.chosenMove = null;
                 result.add(child);
             }
@@ -70,7 +71,7 @@ public class PokeState extends MinMaxState{
     public void calculateHValue() {
         
         //Si usa Heuristca 2, en funcion a pesos
-        if (battle.getEntrenadores().get(0).getWeights()!=null)
+        if (battle.getEntrenadores().get(pcIndex).getWeights()!=null)
         {
             //Ratio de Hitpoints
             int inactvHP = 0, activeHP = 0;
@@ -131,12 +132,12 @@ public class PokeState extends MinMaxState{
         }
         //Si usa Heuristca 1, diferencia de puntos
         else
-        {
+        {           
             int pcHP = 0, userHP = 0;
-            for(Pokemon p : battle.getEntrenadores().get(0).getTeam()){
+            for(Pokemon p : battle.getEntrenadores().get((pcIndex+1)%2).getTeam()){
                 userHP += p.getHitPoints();
             }
-            for(Pokemon p : battle.getEntrenadores().get(1).getTeam()){
+            for(Pokemon p : battle.getEntrenadores().get(pcIndex).getTeam()){
                 pcHP += p.getHitPoints();
             }
             setHValue(pcHP - userHP);

@@ -35,14 +35,25 @@ public class PokeTAC {
     public static final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
     public static final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
     public static final int MAX_DEPTH = 4;
+    public static final double GENETIC_WEIGHTS[] = {.86,.13,.83,.25};
     private MinMaxAlgo mmAlgo;
+    private List<PokeInfo> pokemonDB;
+    
+    private Battle activeBattle;
+    private Trainer userTrainer;
+    private Trainer aiTrainer;
+    
+    private Random rnd;
+    private List<PokeType> listTypes;
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {       
-        MainWindow mw = new MainWindow();
-        mw.setVisible(true);        
+    public static void main(String[] args) { 
+        TestingUnit unit = new TestingUnit();
+        unit.printTestAIs(true, 100);
+        //MainWindow mw = new MainWindow();
+        //mw.setVisible(true);        
         
         //MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(3, 0.1, -1, 1, 5);
 
@@ -50,25 +61,6 @@ public class PokeTAC {
 
         //Indv[] ans = mga.ProccessGenerations(100);
     }
-    
-    static boolean askIfBattleAgain()
-    {
-        System.out.println("Deseas jugar otra vez? [s/n]:");
-        
-        String ans = System.console().readLine();
-        
-        return ans.equalsIgnoreCase("s");
-    }
-    
-    // << InternalFields >>
-    List<PokeInfo> pokemonDB;
-    
-    Battle activeBattle;
-    Trainer userTrainer;
-    Trainer aiTrainer;
-    
-    Random rnd;
-    List<PokeType> listTypes;
     
     // << InternalMethods >>
     
@@ -84,6 +76,7 @@ public class PokeTAC {
     {
         initGame(username,"IA");       
     }
+    
     public void initGame(String trainer_0_name, String trainer_1_name)
     {
 
@@ -119,14 +112,6 @@ public class PokeTAC {
                     System.out.println("error:PokeMovements loader");
                     e.printStackTrace();
                 }
-            ////Intercambiar tipos por los cargados en loadDataPokemonMultipliers
-            //List<PokeType> types=pokemonDB.get(i).getPokeTypes();
-            //List<PokeType> newTypes = new ArrayList();
-            //for(PokeType pt : types)
-            //{
-            //    newTypes.add(FindPokeTypeByName(pt.getName()));
-            //}
-            //pokemonDB.get(i).setTipos(newTypes);
             
         }
         //Crear todo lo necesario para el AI
@@ -284,7 +269,7 @@ public class PokeTAC {
     }
         
     public Movement selectAIMinMaxMove(){
-        PokeState state  = (PokeState)mmAlgo.getNextMove(new PokeState(new Battle(activeBattle)), true);
+        PokeState state  = (PokeState)mmAlgo.getNextMove(new PokeState(new Battle(activeBattle),1), true);
         if(state.getChosenMove()!= null){
             aiTrainer.setNextMove(state.getChosenMove());
             return state.getChosenMove();
@@ -295,9 +280,9 @@ public class PokeTAC {
         
     }
     
-    public void setMinMaxWeightedMove(Battle battle)
+    public void setMinMaxWeightedMove(Battle battle, int index)
     {
-        PokeState state  = (PokeState)mmAlgo.getNextMove(new PokeState(new Battle(battle)), true);
+        PokeState state  = (PokeState)mmAlgo.getNextMove(new PokeState(new Battle(battle), index), true);
         if(state.getChosenMove()!= null){
             battle.activeTrainer().setNextMove(state.getChosenMove());
         }else{
@@ -482,10 +467,8 @@ public class PokeTAC {
         autoBattleTeam = aiTrainer.getTeam();
         aiTrainer.setTeam(null);        
     }
-    
-    
-    
-    public int weightedAutoBattle(double[] chromosomeA, double[] chromosomeB) 
+      
+    public int weightedAutoBattle(double[] chromosomeA, double[] chromosomeB, boolean randAI1, boolean randAI2) 
     {    
         //Copiar equipos
         List<Pokemon> team1 = new ArrayList<>();
@@ -506,14 +489,20 @@ public class PokeTAC {
         
         //Ejecutar batalla
         int maxTurns = 25;
-        int countTurns = 1;
+        int countTurns = 0;
         while (!activeBattle.isBattleOver())
         {
             //En caso se halla llegado a un bucle infinito
             if ((countTurns%maxTurns)==0) 
                 setAIRandomMove(activeBattle.activeTrainer());
-            else
-                setMinMaxWeightedMove(activeBattle);
+            else{
+                if((countTurns%2 == 0 && randAI1) ||
+                        (countTurns%2 == 1 && randAI2)){
+                    setAIRandomMove(activeBattle.activeTrainer());
+                }else{
+                   setMinMaxWeightedMove(activeBattle, countTurns%2); 
+                } 
+            }
             //En caso el bucle no se soluciona
             if (countTurns==60)
                 return -1;

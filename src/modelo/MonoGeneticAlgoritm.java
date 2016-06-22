@@ -231,7 +231,7 @@ import poketac.PokeTAC;
             //¿Los poquemon y sus movimientos deben ser los mismos para ambos jugadores?
             //¿Se debe usar los diferentes poquemon en cada batalla?
                         
-            int winTrainer = poketac.weightedAutoBattle(a.chromosome,b.chromosome);
+            int winTrainer = poketac.weightedAutoBattle(a.chromosome,b.chromosome, false, false);
             
             if (winTrainer==0)
             {
