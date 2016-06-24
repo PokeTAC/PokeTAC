@@ -26,6 +26,7 @@ public class PokeState extends MinMaxState{
     
     public PokeState(Battle battle, int pcIndex){
         this.battle = battle;
+        this.pcIndex = pcIndex;
     }
     
     public Movement getChosenMove(){
@@ -73,26 +74,29 @@ public class PokeState extends MinMaxState{
         //Si usa Heuristca 2, en funcion a pesos
         if (battle.getEntrenadores().get(pcIndex).getWeights()!=null)
         {
+            Trainer t1 = battle.getEntrenadores().get(pcIndex);
+            Trainer t2 = battle.getEntrenadores().get((pcIndex+1)%2);
+            
             //Ratio de Hitpoints
             int inactvHP = 0, activeHP = 0;
-            for(Pokemon p : battle.activeTrainer().getTeam()){
+            for(Pokemon p : t1.getTeam()){
                 activeHP += p.getHitPoints();
             }
-            for(Pokemon p : battle.inactiveTrainer().getTeam()){
+            for(Pokemon p : t2.getTeam()){
                 inactvHP += p.getHitPoints();
             }
             double hpRate = (inactvHP<=0)? 100 : (double)activeHP/inactvHP;
             
             //Ratio de poquemon vivos
             int alive = 0;
-            for(Pokemon p : battle.activeTrainer().getTeam()){
+            for(Pokemon p : t1.getTeam()){
                 alive += (p.getHitPoints()>0)? 1 : 0;
             }
             double aliveRate = (double)alive/PokeTAC.MAX_POKEMON;
             
             //Pokemon de oponentes con effectos activos
             int pokeEffected = 0;
-            for(Pokemon poke : battle.inactiveTrainer().getTeam())
+            for(Pokemon poke : t2.getTeam())
             {
                 for(Effect effect : poke.getActiveEffects())
                 {
@@ -112,11 +116,11 @@ public class PokeState extends MinMaxState{
             
             //Cantidad de movimientos que tienen ventaja
             int advantageCount = 0;
-            for(Movement move : battle.activeTrainer().getActivePokemon().getMovimientos())
+            for(Movement move : t1.getActivePokemon().getMovimientos())
             {
                 double multiplier = 1;
                 try {
-                    multiplier = move.getPokeType().getMultiplier(battle.inactiveTrainer().getActivePokemon().getPokeInfo().getPokeTypes());
+                    multiplier = move.getPokeType().getMultiplier(t2.getActivePokemon().getPokeInfo().getPokeTypes());
                 }
                 catch(Exception e){
                     //System.out.println("error:PokeMultiplier use");
@@ -126,21 +130,23 @@ public class PokeState extends MinMaxState{
             }
             double advantageRate = (double)advantageCount/PokeTAC.MAX_POKEMON;
             
-            double[] w = battle.activeTrainer().getWeights();
+            double[] w = t1.getWeights();
             
             setHValue((int)((w[0]*hpRate + w[1]*aliveRate + w[2]*effectedRate + w[3]*advantageRate)*1000));
         }
         //Si usa Heuristca 1, diferencia de puntos
         else
         {           
-            int pcHP = 0, userHP = 0;
+            float pcHP = 0, totalPcHP=0, userHP = 0, totalUserHP = 0;
             for(Pokemon p : battle.getEntrenadores().get((pcIndex+1)%2).getTeam()){
                 userHP += p.getHitPoints();
+                totalUserHP += p.getPokeInfo().getHp();
             }
             for(Pokemon p : battle.getEntrenadores().get(pcIndex).getTeam()){
                 pcHP += p.getHitPoints();
+                totalPcHP += p.getPokeInfo().getHp();
             }
-            setHValue(pcHP - userHP);
+            setHValue((int)(pcHP/totalPcHP*1000 - userHP/totalUserHP*1000) );
         }
     }
     

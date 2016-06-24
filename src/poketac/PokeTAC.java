@@ -35,7 +35,7 @@ public class PokeTAC {
     public static final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
     public static final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
     public static final int MAX_DEPTH = 4;
-    public static final double GENETIC_WEIGHTS[] = {.86,.13,.83,.25};
+    public static final double GENETIC_WEIGHTS[] = {0.31, 0.79, 0.55, 0.31};
     private MinMaxAlgo mmAlgo;
     private List<PokeInfo> pokemonDB;
     
@@ -55,11 +55,12 @@ public class PokeTAC {
         //MainWindow mw = new MainWindow();
         //mw.setVisible(true);        
         
-        //MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(3, 0.1, -1, 1, 5);
-
-        //mga.CreateInitialPopulation(4,10);
-
-        //Indv[] ans = mga.ProccessGenerations(100);
+//        MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(3, 0.1, -1, 1, 5);
+//
+//        mga.CreateInitialPopulation(4,10);
+//
+//        Indv[] ans = mga.ProccessGenerations(100);
+//        System.out.print(ans);
     }
     
     // << InternalMethods >>
