@@ -12,6 +12,7 @@ import java.util.Random;
 import modelo.Battle;
 import MinMaxAlgorithm.MinMaxAlgo;
 import MinMaxAlgorithm.PokeState;
+import View.MainWindow.AIType;
 import modelo.Trainer;
 import modelo.Pokemon;
 import modelo.Movement;
@@ -34,9 +35,15 @@ public class PokeTAC {
     private static final String FILE_DIR = "Files/";
     public static final int MAX_POKEMON = 4; //Cantidad de pokemons por entrenador
     public static final int MAX_MOVES = 4; //Cantidad de moviminetos por pokemon
-    public static final int MAX_DEPTH = 4;
     private MinMaxAlgo mmAlgo;
-
+    
+    private int maxDepth = 4;
+    public void setMaxDepth(int value) { maxDepth = value; }
+    public int getMaxDepth() { return maxDepth;}
+    
+    private AIType aiType = AIType.ALEATORIO;
+    public void setAIType(AIType value){aiType = value;}
+    
     /**
      * @param args the command line arguments
      */
@@ -134,7 +141,7 @@ public class PokeTAC {
         
         userTrainer = new Trainer(trainer_0_name);
         aiTrainer = new Trainer(trainer_1_name);
-        mmAlgo = new MinMaxAlgo(MAX_DEPTH);
+        mmAlgo = new MinMaxAlgo(maxDepth);
         
         rnd = new Random();
        
@@ -432,7 +439,20 @@ public class PokeTAC {
     }
     
     public void initBattle(List<Pokemon> pokemons){
-        selectAITeam();
+        selectAITeam();        
+        
+        if (aiType==AIType.EVOLUTIVO)
+        {
+            MonoGeneticAlgoritm mga = new MonoGeneticAlgoritm(3, 0.1, -1, 1, 2, 2, aiTrainer.getTeam());
+
+            mga.CreateInitialPopulation(4,5);
+
+            Indv[] ans = mga.ProccessGenerations(30);
+            
+            aiTrainer.setWeights(ans[ans.length-1].getChromosome());
+        }
+        
+        
         BufferedImage imagen = null;
         //ImageIcon imagen=null;
         for(int i=0;i<pokemons.size();i++){
@@ -475,28 +495,60 @@ public class PokeTAC {
         return activeBattle.isUserTurn();
     }
     
-    List<Pokemon> autoBattleTeam;
-    public void prepareAutoBattleTeam()
+    public List<Pokemon> GetRandomTeam()
     {
-        selectAITeam();
-        autoBattleTeam = aiTrainer.getTeam();
-        aiTrainer.setTeam(null);        
+        List<Pokemon> ipokemons = new ArrayList<>();
+        
+        for (int i = 0; i < MAX_POKEMON; i++) {
+            
+            PokeInfo pokeinfo = pokemonDB.get(rnd.nextInt(pokemonDB.size()));
+           
+            List<Movement> moves = new ArrayList<>();
+            for (int j = 0; j < MAX_MOVES; j++) {
+                
+                List<Movement> pokeMoves = pokeinfo.getMoves();
+                
+                Movement move = pokeMoves.get(rnd.nextInt(pokeMoves.size()));              
+                
+                if (moves.contains(move))
+                    j--;
+                else
+                    moves.add(move); 
+            }
+            
+            ipokemons.add(new Pokemon(pokeinfo,moves));
+                        
+        }
+        
+        return ipokemons;
     }
     
-    
-    
-    public int weightedAutoBattle(double[] chromosomeA, double[] chromosomeB) 
-    {    
-        //Copiar equipos
-        List<Pokemon> team1 = new ArrayList<>();
-        List<Pokemon> team2 = new ArrayList<>();
-        for (int i = 0; i < autoBattleTeam.size(); i++) {
-            team1.add(new Pokemon(autoBattleTeam.get(i)));
-            team2.add(new Pokemon(autoBattleTeam.get(i)));
+    public void setAutoBattleTeams(List<Pokemon> teamA, List<Pokemon> teamB, boolean copy)
+    {
+        List<Pokemon> team1;
+        List<Pokemon> team2;
+        
+        if (copy)
+        {
+            team1 = new ArrayList<>();
+            team2 = new ArrayList<>();
+            for (int i = 0; i < teamA.size(); i++) {
+                team1.add(new Pokemon(teamA.get(i)));
+                team2.add(new Pokemon(teamB.get(i)));
+            }
         }
+        else
+        {
+            team1 = teamA;
+            team2 = teamB;
+        }
+        
         userTrainer.setTeam(team1);
         aiTrainer.setTeam(team2);
-        
+    }
+    
+    public int weightedAutoBattle(double[] chromosomeA, double[] chromosomeB) 
+    {           
         //Establecer pesos
         userTrainer.setWeights(chromosomeA);
         aiTrainer.setWeights(chromosomeB);
@@ -508,7 +560,7 @@ public class PokeTAC {
         int maxTurns = 25;
         int countTurns = 1;
         while (!activeBattle.isBattleOver())
-        {
+        {  
             //En caso se halla llegado a un bucle infinito
             if ((countTurns%maxTurns)==0) 
                 setAIRandomMove(activeBattle.activeTrainer());

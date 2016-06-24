@@ -48,6 +48,8 @@ import poketac.PokeTAC;
         
         double numTeams;
         
+        List<Pokemon> aiTeam;
+        
         //#endregion
 
 
@@ -59,7 +61,7 @@ import poketac.PokeTAC;
         //#endregion
 
 
-        public MonoGeneticAlgoritm(int crossPoint, double mutateProbability, int randomSeed, int crossType, int numTeams)
+        public MonoGeneticAlgoritm(int crossPoint, double mutateProbability, int randomSeed, int crossType, int numTeams, int maxDepth, List<Pokemon> aiTeam)
         {
             //Iniciar campos
             this.crossPoint = crossPoint;
@@ -68,9 +70,11 @@ import poketac.PokeTAC;
             if (randomSeed < 0) rnd = new Random(); else rnd = new Random(randomSeed);
             this.crossType = crossType;
             this.numTeams = numTeams;
+            this.aiTeam = aiTeam;
             
             //Iniciar poketac para evaluar el fitness
             poketac = new PokeTAC();
+            poketac.setMaxDepth(maxDepth);
             poketac.initGame("AI_0","AI_1");
         }
 
@@ -179,6 +183,10 @@ import poketac.PokeTAC;
 
         private Indv GetRandomByFitness(Indv[] indiv, int sumFitness)
         {
+            if (sumFitness==0)
+            {
+                return indiv[rnd.nextInt(indiv.length)];
+            }
             int rndVal = rnd.nextInt(sumFitness);
 
             for (int i = 0; i < indiv.length; i++)
@@ -199,19 +207,25 @@ import poketac.PokeTAC;
             individual.getChromosome()[chrToChange] = rnd.nextDouble();
         }
 
+        
+        /*
         private void ProccessFitness(Indv[] individuals)
         {
-            //Se ejecuta con 5 equipos diferentes para que el calculo sea mas exacto y no influya tanto el equipo
+            //Se ejecuta con 5 equipos diferentes para que el calculo sea mas exacto y no influya tanto el equipo elegido
             for (int h = 0; h < numTeams; h++) 
             {
-                //Se prepara el equipo  
-                poketac.prepareAutoBattleTeam();
+                List<Pokemon> teamA = poketac.GetRandomTeam();
+                List<Pokemon> teamB = poketac.GetRandomTeam();
+                
                 //Se prueba cada uno contra cada uno, todos con el mismo equipo
                 int nulls = 0;
                 for (int i = 0; i < individuals.length; i++) {
                     for (int j = 0; j < individuals.length; j++) {
                         if (i!=j)
                         {   
+                            //Se prepara el equipo  
+                            poketac.setAutoBattleTeams(teamA, teamB, true);
+                            
                             //Batalla entre individuals[i] y individuals[j]
                             Indv winner = Battle(individuals[i],individuals[j]);
 
@@ -225,25 +239,56 @@ import poketac.PokeTAC;
             }
 
         }
+        */
+        private void ProccessFitness(Indv[] individuals)
+        {
+            //Iniciar fitness minimo
+            for(Indv indv : individuals)
+            {
+                indv.fitness = 1;
+            }
+                      
+            //Se ejecuta con equipos diferentes para que el calculo sea mas exacto y no influya tanto el equipo elegido
+            for (int h = 0; h < numTeams; h++) 
+            {
+                List<Pokemon> teamA = aiTeam;
+                List<Pokemon> teamB = poketac.GetRandomTeam();
+                
+                //Se prueba cada uno contra cada uno, todos con el mismo equipo
+                int nulls = 0;
+                for (int i = 0; i < individuals.length; i++) 
+                {  
+                    
+                    poketac.setAutoBattleTeams(teamA, teamB, true);
+
+                    //Batalla entre individuals[i] y individuals[j]
+                    Indv winner = Battle(individuals[i],null);
+
+                    if (winner==individuals[i])
+                        winner.fitness++;
+                    else
+                        nulls++;
+                }
+            }
+
+        }
         
         private Indv Battle(Indv a, Indv b)
         {       
             //¿Los poquemon y sus movimientos deben ser los mismos para ambos jugadores?
             //¿Se debe usar los diferentes poquemon en cada batalla?
                         
-            int winTrainer = poketac.weightedAutoBattle(a.chromosome,b.chromosome);
+
+            //Se pelea
+            int winTrainer = poketac.weightedAutoBattle(a.chromosome,(b==null)? null : b.chromosome);
             
-            if (winTrainer==0)
-            {
-                return a;
-            }
-            else if (winTrainer==1)
-            {
-                return b;
-            }
-            else
-            {
-                return null;
+            switch (winTrainer) {
+                case 0:
+                    return a;
+                case 1:
+                    return b;
+                default:
+                    return null;
             }
         }
         
@@ -282,4 +327,3 @@ import poketac.PokeTAC;
         //#endregion
 
     }
-

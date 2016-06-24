@@ -70,7 +70,7 @@ public class PokeState extends MinMaxState{
     public void calculateHValue() {
         
         //Si usa Heuristca 2, en funcion a pesos
-        if (battle.getEntrenadores().get(0).getWeights()!=null)
+        if (battle.activeTrainer().getWeights()!=null)
         {
             //Ratio de Hitpoints
             int inactvHP = 0, activeHP = 0;
@@ -133,10 +133,10 @@ public class PokeState extends MinMaxState{
         else
         {
             int pcHP = 0, userHP = 0;
-            for(Pokemon p : battle.getEntrenadores().get(0).getTeam()){
+            for(Pokemon p : battle.inactiveTrainer().getTeam()){
                 userHP += p.getHitPoints();
             }
-            for(Pokemon p : battle.getEntrenadores().get(1).getTeam()){
+            for(Pokemon p : battle.activeTrainer().getTeam()){
                 pcHP += p.getHitPoints();
             }
             setHValue(pcHP - userHP);
